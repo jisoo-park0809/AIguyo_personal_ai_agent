@@ -1,0 +1,97 @@
+{
+  "id": "game-client-unity",
+  "title": "Unity 게임 클라이언트 개발자 과정 (예시)",
+  "note": "생성 agent 시연용으로 만든 가상의 과정 예시입니다. 실제 운영 과정이 아닙니다.",
+  "track": "게임",
+  "flow": "기초 문법 → 엔진 → 콘텐츠 제작 → 협업·QA → 기업 과제 프로젝트",
+  "goals": [
+    {"id": "G1", "text": "C#과 Unity로 2D 게임을 혼자 기획부터 빌드까지 완성할 수 있다"},
+    {"id": "G2", "text": "기획 → 개발 → QA → 출시로 이어지는 게임 회사 업무 흐름을 팀으로 경험한다"},
+    {"id": "G3", "text": "협약 기업 과제를 수행해 포트폴리오 2개 이상을 완성한다"},
+    {"id": "G4", "text": "데이터 저장·서버 연동 등 라이브 서비스 운영의 기초를 다룬다"}
+  ],
+  "subjects": [
+    {
+      "title": "게임 개발 입문과 C# 기초", "category": "이론", "weight": 3, "theory_share": 0.4,
+      "topics": ["게임 개발 직무 이해", "C# 문법", "클래스와 객체", "디버깅"],
+      "concepts_taught": ["C# 문법", "객체지향", "디버깅"], "prerequisites": [],
+      "assessment": "코딩 과제 + 형성평가 퀴즈", "linked_goals": ["G1"],
+      "rationale": "프로그래밍 경험이 없는 학습자도 따라오도록 문법부터 시작",
+      "units": [
+        {"title": "게임 개발 직무와 개발 환경", "share": 0.1, "activities": ["직무 특강", "개발 환경 설치"], "deliverable": "개발 환경 체크리스트"},
+        {"title": "C# 문법 (변수·조건·반복·함수)", "share": 0.4, "activities": ["문법 실습", "미니 과제"], "deliverable": "콘솔 미니게임"},
+        {"title": "클래스와 객체지향", "share": 0.35, "activities": ["클래스 설계 실습"], "deliverable": "캐릭터 클래스 설계"},
+        {"title": "디버깅과 코드 리뷰", "share": 0.15, "activities": ["디버거 실습", "짝 코드 리뷰"], "deliverable": "리뷰 기록"}
+      ]
+    },
+    {
+      "title": "게임 수학과 자료구조", "category": "이론", "weight": 2, "theory_share": 0.5,
+      "topics": ["벡터와 좌표계", "행렬과 변환", "배열·리스트·딕셔너리", "탐색과 정렬"],
+      "concepts_taught": ["벡터", "행렬", "자료구조"], "prerequisites": ["C# 문법"],
+      "assessment": "문제 풀이 과제", "linked_goals": ["G1"],
+      "rationale": "물리·충돌 구현 전에 필요한 수학을 따로 다룸",
+      "units": [
+        {"title": "벡터와 좌표계", "share": 0.35, "activities": ["이동·방향 계산 실습"], "deliverable": "벡터 연습 문제"},
+        {"title": "행렬과 변환", "share": 0.25, "activities": ["회전·크기 변환 실습"], "deliverable": "변환 실습 결과"},
+        {"title": "자료구조와 알고리즘 기초", "share": 0.4, "activities": ["인벤토리 구현"], "deliverable": "인벤토리 모듈"}
+      ]
+    },
+    {
+      "title": "Unity 엔진 기초", "category": "실습", "weight": 3, "theory_share": 0.25,
+      "topics": ["에디터와 씬", "게임오브젝트와 컴포넌트", "스크립트 생명주기", "프리팹"],
+      "concepts_taught": ["Unity 에디터", "게임오브젝트", "컴포넌트"], "prerequisites": ["C# 문법", "객체지향"],
+      "assessment": "실습 결과물 체크리스트", "linked_goals": ["G1"],
+      "units": [
+        {"title": "에디터와 씬 구성", "share": 0.25, "activities": ["씬 만들기"], "deliverable": "기본 씬"},
+        {"title": "게임오브젝트·컴포넌트·프리팹", "share": 0.45, "activities": ["컴포넌트 스크립트 작성"], "deliverable": "플레이어 프리팹"},
+        {"title": "입력·카메라·생명주기", "share": 0.3, "activities": ["조작 구현"], "deliverable": "조작 가능한 캐릭터"}
+      ]
+    },
+    {
+      "title": "2D 게임 제작 (물리·충돌·애니메이션)", "category": "실습", "weight": 3, "theory_share": 0.2,
+      "topics": ["Rigidbody2D와 물리", "충돌 처리", "스프라이트 애니메이션", "사운드"],
+      "concepts_taught": ["물리엔진", "충돌처리", "애니메이션"], "prerequisites": ["벡터", "컴포넌트"],
+      "assessment": "개인 미니 게임 제출", "linked_goals": ["G1"], "feeds_project": true,
+      "units": [
+        {"title": "물리와 충돌", "share": 0.35, "activities": ["플랫폼 점프 구현"], "deliverable": "충돌 데모"},
+        {"title": "애니메이션과 사운드", "share": 0.25, "activities": ["애니메이터 실습"], "deliverable": "애니메이션 적용 캐릭터"},
+        {"title": "개인 미니 게임 제작", "share": 0.4, "activities": ["1인 게임 제작"], "deliverable": "개인 미니 게임 빌드"}
+      ]
+    },
+    {
+      "title": "게임 기획과 UI·UX", "category": "실습", "weight": 2, "theory_share": 0.35,
+      "topics": ["게임 기획서", "레벨 디자인", "UI 시스템", "사용성 테스트"],
+      "concepts_taught": ["게임 기획서", "UI 시스템"], "prerequisites": ["Unity 에디터"],
+      "assessment": "기획서 + UI 프로토타입", "linked_goals": ["G2"], "feeds_project": true,
+      "units": [
+        {"title": "게임 기획서와 레벨 디자인", "share": 0.5, "activities": ["기획서 작성"], "deliverable": "기획서"},
+        {"title": "UI 시스템과 사용성 테스트", "share": 0.5, "activities": ["UI 구현", "사용성 테스트"], "deliverable": "UI 프로토타입"}
+      ]
+    },
+    {
+      "title": "데이터 저장과 서버 연동", "category": "실습", "weight": 2, "theory_share": 0.3,
+      "topics": ["로컬 저장", "JSON 직렬화", "REST API 연동", "랭킹 서버 연동"],
+      "concepts_taught": ["데이터 저장", "REST API"], "prerequisites": ["자료구조"],
+      "assessment": "연동 실습 결과물", "linked_goals": ["G4"], "feeds_project": true,
+      "units": [
+        {"title": "로컬 저장과 직렬화", "share": 0.4, "activities": ["세이브 기능 구현"], "deliverable": "세이브 기능"},
+        {"title": "REST API와 랭킹 연동", "share": 0.6, "activities": ["랭킹 API 연동"], "deliverable": "랭킹 연동 데모"}
+      ]
+    },
+    {
+      "title": "협업 도구와 QA·빌드 배포", "category": "실습", "weight": 1.5, "theory_share": 0.3,
+      "topics": ["Git 협업", "이슈 관리", "테스트와 QA", "빌드·스토어 배포"],
+      "concepts_taught": ["Git 협업", "QA", "빌드 배포"], "prerequisites": ["Unity 에디터"],
+      "assessment": "팀 저장소 기여 기록 + QA 리포트", "linked_goals": ["G2"], "feeds_project": true,
+      "units": [
+        {"title": "Git 협업과 이슈 관리", "share": 0.5, "activities": ["브랜치 전략 실습"], "deliverable": "팀 저장소"},
+        {"title": "QA와 빌드·배포", "share": 0.5, "activities": ["테스트 케이스 작성", "빌드 배포"], "deliverable": "QA 리포트"}
+      ]
+    }
+  ],
+  "project_template": {
+    "concepts_taught": ["기업 과제 수행", "라이브 운영"],
+    "prerequisites": ["충돌처리", "UI 시스템", "Git 협업", "REST API"],
+    "linked_goals": ["G2", "G3"]
+  }
+}

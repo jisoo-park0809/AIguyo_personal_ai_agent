@@ -1,0 +1,7 @@
+.env
+.venv/
+data/library/
+__pycache__/
+data/versions/
+data/learner_types.json
+.DS_Store

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "P1",
+    "name": "학생 1 · 경험 있는 전공자",
+    "summary": "해당 분야 지식과 프로젝트 경험이 모두 있는 전공자",
+    "group": "major",
+    "major": true,
+    "knowledge": "상: 프로그래밍 기초, 자료구조, 해당 분야의 기본 도구를 이미 다룰 줄 안다",
+    "project_experience": "있음: 팀 프로젝트를 2번 이상 해 봤다",
+    "known_terms": ["*"],
+    "unknown": ["최신 실무 도구 일부"],
+    "misconceptions": [],
+    "cares_about": "이미 아는 내용이 길게 반복되지 않는지, 내용의 깊이",
+    "review_hours_per_day": 1,
+    "dropout_signal": "지루함: 아는 내용이 몇 주씩 이어지면 흥미를 잃는다"
+  },
+  {
+    "id": "P2",
+    "name": "학생 2 · 프로젝트 경험 적은 전공자",
+    "summary": "해당 분야 지식은 있으나 프로젝트 경험이 적거나 없는 전공자",
+    "group": "major",
+    "major": true,
+    "knowledge": "상: 이론과 기초 문법은 알지만 실제로 만들어 본 경험이 적다",
+    "project_experience": "거의 없음: 수업 과제 수준",
+    "known_terms": ["*"],
+    "unknown": ["실전 협업", "일정 관리", "실제 서비스 수준의 구현"],
+    "misconceptions": ["기능이 돌아가면 끝이라고 생각한다"],
+    "cares_about": "프로젝트로 실력이 실제로 붙는지, 처음 하는 팀 작업을 안내받는지",
+    "review_hours_per_day": 2,
+    "dropout_signal": "막막함: 안내 없이 큰 프로젝트를 바로 맡으면 손을 못 댄다"
+  },
+  {
+    "id": "P3",
+    "name": "학생 3 · 경험 있는 비전공자",
+    "summary": "해당 분야 지식과 프로젝트 경험은 있으나 전공자만큼 실력은 없는 비전공자",
+    "group": "non_major",
+    "major": false,
+    "knowledge": "중: 독학으로 기초 문법과 도구를 다뤄 봤지만 깊은 이론은 약하다",
+    "project_experience": "있음: 혼자 하는 작은 프로젝트",
+    "known_terms": ["프로그래밍 기초", "변수", "함수", "조건문", "반복문", "기초 문법", "C# 문법", "C# 기본문법", "파이썬 문법", "HTML", "Git", "에디터"],
+    "unknown": ["자료구조", "알고리즘", "수학(벡터·행렬)", "설계 원칙", "서버·네트워크 깊은 내용"],
+    "misconceptions": ["개념 이름은 알지만 원리를 잘못 이해하고 있다"],
+    "cares_about": "기초 공백이 메워지는지, 진도가 갑자기 빨라지지 않는지",
+    "review_hours_per_day": 2,
+    "dropout_signal": "갑작스런 난이도 상승: 이론이 몰려 나오면 자신감을 잃는다"
+  },
+  {
+    "id": "P4",
+    "name": "학생 4 · 처음 배우는 비전공자",
+    "summary": "아무런 지식과 경험이 없는 비전공자",
+    "group": "non_major",
+    "major": false,
+    "knowledge": "없음: 컴퓨터를 쓰는 정도. 프로그래밍을 해 본 적이 없다",
+    "project_experience": "없음",
+    "known_terms": [],
+    "unknown": ["프로그래밍 전반", "대학 수학", "개발 도구", "협업 도구"],
+    "misconceptions": ["변수와 함수를 헷갈린다", "에러가 나면 내가 망가뜨렸다고 생각한다"],
+    "cares_about": "끝까지 따라갈 수 있는지, 하루 학습량이 감당되는지",
+    "review_hours_per_day": 3,
+    "dropout_signal": "첫 4주 안에 막히면 포기를 고민한다"
+  }
+]

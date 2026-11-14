@@ -1,0 +1,1849 @@
+[
+  {
+    "step": 1,
+    "thought": "과정 정보와 교육 목적, 훈련 대상, 협약 기업 과제, 결과물 요구를 확인해 커리큘럼 설계를 시작하려고 합니다.",
+    "tool": "get_brief",
+    "args": {},
+    "result": {
+      "mode": "생성",
+      "draft": {
+        "name": "2027 상반기 게임 클라이언트 과정 초안",
+        "owner": "박지수",
+        "memo": "",
+        "course_examples": [
+          "game-client-unity"
+        ]
+      },
+      "outputs": [
+        "편성표",
+        "단원 설계"
+      ],
+      "course": {
+        "business_profile": "KDT",
+        "field": "게임 개발 / Unity·C#",
+        "title": "Unity 기반 게임 클라이언트 개발자 양성 과정",
+        "total_hours": 800,
+        "daily_hours": 8,
+        "days_per_week": 5,
+        "months": 5.0,
+        "training_mode": "집체",
+        "weeks": 21.7
+      },
+      "learners": {
+        "target": "게임 클라이언트 개발자로 취업하려는 전공자와 비전공자 (프로그래밍 경험이 없는 사람 포함)",
+        "non_major_ratio": 60.0,
+        "prior_experience": [
+          "컴퓨터 기초"
+        ],
+        "goal": "게임 클라이언트 개발자 취업"
+      },
+      "purpose": "게임 개발 전반의 일경험: 기획 → 개발 → QA → 출시까지 실제 게임 회사의 업무 흐름을 따라가며 포트폴리오를 완성한다",
+      "composition": {
+        "project_ratio_min": 0.4,
+        "required_subjects": [
+          "Unity 엔진 기초",
+          "AI 활용 개발 도구"
+        ],
+        "company_tasks": [
+          {
+            "id": "T1",
+            "company": "(가상) 픽셀웍스 스튜디오",
+            "title": "모바일 캐주얼 게임 이벤트 시스템 개발",
+            "description": "기간 한정 이벤트와 보상 지급, 이벤트 UI를 기존 게임에 붙인다",
+            "deliverable": "이벤트 시스템이 들어간 플레이 가능한 빌드"
+          },
+          {
+            "id": "T2",
+            "company": "(가상) 블루하버 게임즈",
+            "title": "멀티플레이 랭킹·보상 기능 개발",
+            "description": "랭킹 API를 연동하고 시즌 보상을 지급한다",
+            "deliverable": "랭킹 연동 데모와 API 연동 문서"
+          }
+        ]
+      },
+      "announcement": {
+        "uploaded": true,
+        "chars": 413
+      }
+    }
+  },
+  {
+    "step": 2,
+    "thought": "총 훈련시간, 프로젝트 비율, 필수 교과목과 편성 제약을 확인해 설계 기준을 잡으려고 합니다.",
+    "tool": "get_rules",
+    "args": {},
+    "result": {
+      "targets": {
+        "total_hours": 800,
+        "project_hours_min": 320.0,
+        "hours_per_week": 40,
+        "total_weeks": 20,
+        "period_weeks_max": 21.7,
+        "period_hours_max": 868,
+        "training_mode": "집체",
+        "required_subjects": [
+          "Unity 엔진 기초",
+          "AI 활용 개발 도구"
+        ]
+      },
+      "business_profile": {
+        "name": "K-디지털 트레이닝 (첨단산업·디지털 핵심 실무인재 양성훈련)",
+        "verified": false,
+        "note": "아래 규정 값은 동작 확인용 예시입니다. 실제 공고·운영규정으로 확인한 규정은 입력의 confirmed_rules로 넣거나, 이 파일을 고친 뒤 verified를 true로 바꾸세요.",
+        "rules": [
+          {
+            "id": "KDT-EX1",
+            "text": "1일 훈련시간 8시간 이하 (예시 값)",
+            "grade": "필수",
+            "judge": "계산",
+            "metric": "daily_hours",
+            "op": "<=",
+            "value": 8
+          },
+          {
+            "id": "KDT-EX2",
+            "text": "프로젝트 비율 30% 이상 (예시 값)",
+            "grade": "권장",
+            "judge": "계산",
+            "metric": "project_ratio",
+            "op": ">=",
+            "value": 0.3
+          },
+          {
+            "id": "KDT-EX3",
+            "text": "현장 수요(기업 과제)를 반영한 프로젝트 편성 (예시)",
+            "grade": "권장",
+            "judge": "판단"
+          }
+        ]
+      },
+      "confirmed_rules": [
+        {
+          "id": "R1",
+          "text": "총 훈련시간 800시간 (예시: 공고 확인 필요)",
+          "grade": "필수",
+          "judge": "계산",
+          "metric": "total_hours",
+          "op": "==",
+          "value": 800.0,
+          "source": "(예시) 공고문"
+        }
+      ]
+    }
+  },
+  {
+    "step": 3,
+    "thought": "업로드된 공고에서 편성 조건과 심사 기준을 확인해 커리큘럼 제약을 반영하려고 합니다.",
+    "tool": "search_announcement",
+    "args": {
+      "query": "편성 조건 심사 기준 훈련시간 프로젝트 비율"
+    },
+    "result": {
+      "uploaded": true,
+      "count": 4,
+      "passages": [
+        {
+          "line": 7,
+          "text": "- 총 훈련시간은 공모 기준에 맞게 편성하고, 1일 훈련시간은 8시간을 넘지 않도록 한다. - 협약 기업 과제를 활용한 프로젝트 훈련을 편성하고, 프로젝트 비율은 공고 기준 이상으로 한다. - 비전공자를 위한 기초 교과를 과정 초반에 편성할 것을 권장한다. 3. 심사 기준 (예시)"
+        },
+        {
+          "line": 5,
+          "text": "- 훈련 대상: 취업을 희망하는 청년 구직자 (비전공자 포함) 2. 편성 기준 - 총 훈련시간은 공모 기준에 맞게 편성하고, 1일 훈련시간은 8시간을 넘지 않도록 한다. - 협약 기업 과제를 활용한 프로젝트 훈련을 편성하고, 프로젝트 비율은 공고 기준 이상으로 한다."
+        },
+        {
+          "line": 9,
+          "text": "- 비전공자를 위한 기초 교과를 과정 초반에 편성할 것을 권장한다. 3. 심사 기준 (예시) - 현장 수요 반영도: 협약 기업 과제와 직무 요구의 연계 - 훈련 내용의 체계성: 교과목 순서와 선수 학습 관계"
+        },
+        {
+          "line": 3,
+          "text": "1. 공모 개요 - 대상 분야: 게임 개발 (클라이언트·서버) - 훈련 대상: 취업을 희망하는 청년 구직자 (비전공자 포함) 2. 편성 기준"
+        }
+      ]
+    }
+  },
+  {
+    "step": 4,
+    "thought": "게임 클라이언트 과정의 교과목 구성과 순서를 참고해 초안을 설계하려고 합니다.",
+    "tool": "get_course_example",
+    "args": {
+      "example_id": "game-client-unity"
+    },
+    "result": {
+      "id": "game-client-unity",
+      "title": "Unity 게임 클라이언트 개발자 과정 (예시)",
+      "note": "생성 agent 시연용으로 만든 가상의 과정 예시입니다. 실제 운영 과정이 아닙니다.",
+      "track": "게임",
+      "flow": "기초 문법 → 엔진 → 콘텐츠 제작 → 협업·QA → 기업 과제 프로젝트",
+      "goals": [
+        {
+          "id": "G1",
+          "text": "C#과 Unity로 2D 게임을 혼자 기획부터 빌드까지 완성할 수 있다"
+        },
+        {
+          "id": "G2",
+          "text": "기획 → 개발 → QA → 출시로 이어지는 게임 회사 업무 흐름을 팀으로 경험한다"
+        },
+        {
+          "id": "G3",
+          "text": "협약 기업 과제를 수행해 포트폴리오 2개 이상을 완성한다"
+        },
+        {
+          "id": "G4",
+          "text": "데이터 저장·서버 연동 등 라이브 서비스 운영의 기초를 다룬다"
+        }
+      ],
+      "subjects": [
+        {
+          "title": "게임 개발 입문과 C# 기초",
+          "category": "이론",
+          "weight": 3,
+          "theory_share": 0.4,
+          "topics": [
+            "게임 개발 직무 이해",
+            "C# 문법",
+            "클래스와 객체",
+            "디버깅"
+          ],
+          "concepts_taught": [
+            "C# 문법",
+            "객체지향",
+            "디버깅"
+          ],
+          "prerequisites": [],
+          "assessment": "코딩 과제 + 형성평가 퀴즈",
+          "linked_goals": [
+            "G1"
+          ],
+          "rationale": "프로그래밍 경험이 없는 학습자도 따라오도록 문법부터 시작",
+          "units": [
+            {
+              "title": "게임 개발 직무와 개발 환경",
+              "share": 0.1,
+              "activities": [
+                "직무 특강",
+                "개발 환경 설치"
+              ],
+              "deliverable": "개발 환경 체크리스트"
+            },
+            {
+              "title": "C# 문법 (변수·조건·반복·함수)",
+              "share": 0.4,
+              "activities": [
+                "문법 실습",
+                "미니 과제"
+              ],
+              "deliverable": "콘솔 미니게임"
+            },
+            {
+              "title": "클래스와 객체지향",
+              "share": 0.35,
+              "activities": [
+                "클래스 설계 실습"
+              ],
+              "deliverable": "캐릭터 클래스 설계"
+            },
+            {
+              "title": "디버깅과 코드 리뷰",
+              "share": 0.15,
+              "activities": [
+                "디버거 실습",
+                "짝 코드 리뷰"
+              ],
+              "deliverable": "리뷰 기록"
+            }
+          ]
+        },
+        {
+          "title": "게임 수학과 자료구조",
+          "category": "이론",
+          "weight": 2,
+          "theory_share": 0.5,
+          "topics": [
+            "벡터와 좌표계",
+            "행렬과 변환",
+            "배열·리스트·딕셔너리",
+            "탐색과 정렬"
+          ],
+          "concepts_taught": [
+            "벡터",
+            "행렬",
+            "자료구조"
+          ],
+          "prerequisites": [
+            "C# 문법"
+          ],
+          "assessment": "문제 풀이 과제",
+          "linked_goals": [
+            "G1"
+          ],
+          "rationale": "물리·충돌 구현 전에 필요한 수학을 따로 다룸",
+          "units": [
+            {
+              "title": "벡터와 좌표계",
+              "share": 0.35,
+              "activities": [
+                "이동·방향 계산 실습"
+              ],
+              "deliverable": "벡터 연습 문제"
+            },
+            {
+              "title": "행렬과 변환",
+              "share": 0.25,
+              "activities": [
+                "회전·크기 변환 실습"
+              ],
+              "deliverable": "변환 실습 결과"
+            },
+            {
+              "title": "자료구조와 알고리즘 기초",
+              "share": 0.4,
+              "activities": [
+                "인벤토리 구현"
+              ],
+              "deliverable": "인벤토리 모듈"
+            }
+          ]
+        },
+        {
+          "title": "Unity 엔진 기초",
+          "category": "실습",
+          "weight": 3,
+          "theory_share": 0.25,
+          "topics": [
+            "에디터와 씬",
+            "게임오브젝트와 컴포넌트",
+            "스크립트 생명주기",
+            "프리팹"
+          ],
+          "concepts_taught": [
+            "Unity 에디터",
+            "게임오브젝트",
+            "컴포넌트"
+          ],
+          "prerequisites": [
+            "C# 문법",
+            "객체지향"
+          ],
+          "assessment": "실습 결과물 체크리스트",
+          "linked_goals": [
+            "G1"
+          ],
+          "units": [
+            {
+              "title": "에디터와 씬 구성",
+              "share": 0.25,
+              "activities": [
+                "씬 만들기"
+              ],
+              "deliverable": "기본 씬"
+            },
+            {
+              "title": "게임오브젝트·컴포넌트·프리팹",
+              "share": 0.45,
+              "activities": [
+                "컴포넌트 스크립트 작성"
+              ],
+              "deliverable": "플레이어 프리팹"
+            },
+            {
+              "title": "입력·카메라·생명주기",
+              "share": 0.3,
+              "activities": [
+                "조작 구현"
+              ],
+              "deliverable": "조작 가능한 캐릭터"
+            }
+          ]
+        },
+        {
+          "title": "2D 게임 제작 (물리·충돌·애니메이션)",
+          "category": "실습",
+          "weight": 3,
+          "theory_share": 0.2,
+          "topics": [
+            "Rigidbody2D와 물리",
+            "충돌 처리",
+            "스프라이트 애니메이션",
+            "사운드"
+          ],
+          "concepts_taught": [
+            "물리엔진",
+            "충돌처리",
+            "애니메이션"
+          ],
+          "prerequisites": [
+            "벡터",
+            "컴포넌트"
+          ],
+          "assessment": "개인 미니 게임 제출",
+          "linked_goals": [
+            "G1"
+          ],
+          "feeds_project": true,
+          "units": [
+            {
+              "title": "물리와 충돌",
+              "share": 0.35,
+              "activities": [
+                "플랫폼 점프 구현"
+              ],
+              "deliverable": "충돌 데모"
+            },
+            {
+              "title": "애니메이션과 사운드",
+              "share": 0.25,
+              "activities": [
+                "애니메이터 실습"
+              ],
+              "deliverable": "애니메이션 적용 캐릭터"
+            },
+            {
+              "title": "개인 미니 게임 제작",
+              "share": 0.4,
+              "activities": [
+                "1인 게임 제작"
+              ],
+              "deliverable": "개인 미니 게임 빌드"
+            }
+          ]
+        },
+        {
+          "title": "게임 기획과 UI·UX",
+          "category": "실습",
+          "weight": 2,
+          "theory_share": 0.35,
+          "topics": [
+            "게임 기획서",
+            "레벨 디자인",
+            "UI 시스템",
+            "사용성 테스트"
+          ],
+          "concepts_taught": [
+            "게임 기획서",
+            "UI 시스템"
+          ],
+          "prerequisites": [
+            "Unity 에디터"
+          ],
+          "assessment": "기획서 + UI 프로토타입",
+          "linked_goals": [
+            "G2"
+          ],
+          "feeds_project": true,
+          "units": [
+            {
+              "title": "게임 기획서와 레벨 디자인",
+              "share": 0.5,
+              "activities": [
+                "기획서 작성"
+              ],
+              "deliverable": "기획서"
+            },
+            {
+              "title": "UI 시스템과 사용성 테스트",
+              "share": 0.5,
+              "activities": [
+                "UI 구현",
+                "사용성 테스트"
+              ],
+              "deliverable": "UI 프로토타입"
+            }
+          ]
+        },
+        {
+          "title": "데이터 저장과 서버 연동",
+          "category": "실습",
+          "weight": 2,
+          "theory_share": 0.3,
+          "topics": [
+            "로컬 저장",
+            "JSON 직렬화",
+            "REST API 연동",
+            "랭킹 서버 연동"
+          ],
+          "concepts_taught": [
+            "데이터 저장",
+            "REST API"
+          ],
+          "prerequisites": [
+            "자료구조"
+          ],
+          "assessment": "연동 실습 결과물",
+          "linked_goals": [
+            "G4"
+          ],
+          "feeds_project": true,
+          "units": [
+            {
+              "title": "로컬 저장과 직렬화",
+              "share": 0.4,
+              "activities": [
+                "세이브 기능 구현"
+              ],
+              "deliverable": "세이브 기능"
+            },
+            {
+              "title": "REST API와 랭킹 연동",
+              "share": 0.6,
+              "activities": [
+                "랭킹 API 연동"
+              ],
+              "deliverable": "랭킹 연동 데모"
+            }
+          ]
+        },
+        {
+          "title": "협업 도구와 QA·빌드 배포",
+          "category": "실습",
+          "weight": 1.5,
+          "theory_share": 0.3,
+          "topics": [
+            "Git 협업",
+            "이슈 관리",
+            "테스트와 QA",
+            "빌드·스토어 배포"
+          ],
+          "concepts_taught": [
+            "Git 협업",
+            "QA",
+            "빌드 배포"
+          ],
+          "prerequisites": [
+            "Unity 에디터"
+          ],
+          "assessment": "팀 저장소 기여 기록 + QA 리포트",
+          "linked_goals": [
+            "G2"
+          ],
+          "feeds_project": true,
+          "units": [
+            {
+              "title": "Git 협업과 이슈 관리",
+              "share": 0.5,
+              "activities": [
+                "브랜치 전략 실습"
+              ],
+              "deliverable": "팀 저장소"
+            },
+            {
+              "title": "QA와 빌드·배포",
+              "share": 0.5,
+              "activities": [
+                "테스트 케이스 작성",
+                "빌드 배포"
+              ],
+              "deliverable": "QA 리포트"
+            }
+          ]
+        }
+      ],
+      "project_template": {
+        "concepts_taught": [
+          "기업 과제 수행",
+          "라이브 운영"
+        ],
+        "prerequisites": [
+          "충돌처리",
+          "UI 시스템",
+          "Git 협업",
+          "REST API"
+        ],
+        "linked_goals": [
+          "G2",
+          "G3"
+        ]
+      }
+    }
+  },
+  {
+    "step": 5,
+    "thought": "교육 목적을 게임 개발 업무 흐름과 포트폴리오 완성 중심 구조로 먼저 풀어 편성 기준을 세우려고 합니다.",
+    "tool": "set_plan",
+    "args": {
+      "intent_summary": "비전공자도 따라올 수 있도록 C#·Unity 기초를 초반에 배치하고, 이후 게임 핵심 기능 구현과 협업·QA를 거쳐 협약 기업 과제를 수행하는 프로젝트형 과정으로 구성한다.",
+      "learning_goals": [
+        {
+          "id": "G1",
+          "text": "C#과 Unity의 기초를 익혀 2D 게임 핵심 기능을 구현할 수 있다"
+        },
+        {
+          "id": "G2",
+          "text": "게임 회사의 기획-개발-QA-배포 흐름을 팀 단위로 경험할 수 있다"
+        },
+        {
+          "id": "G3",
+          "text": "협약 기업 과제를 반영한 포트폴리오 프로젝트를 완성할 수 있다"
+        },
+        {
+          "id": "G4",
+          "text": "데이터 저장과 API 연동 등 라이브 서비스 기초 기능을 구현할 수 있다"
+        }
+      ]
+    },
+    "result": {
+      "ok": true,
+      "learning_goals": [
+        "G1",
+        "G2",
+        "G3",
+        "G4"
+      ]
+    }
+  },
+  {
+    "step": 6,
+    "thought": "협약 기업 과제에 맞는 포트폴리오 산출물 유형을 정하려고 게임 분야 예시를 확인합니다.",
+    "tool": "get_portfolio_examples",
+    "args": {
+      "keyword": "게임"
+    },
+    "result": {
+      "portfolios": [
+        {
+          "id": "PF-G1",
+          "track": "게임",
+          "title": "모바일 캐주얼 게임 이벤트 시스템 (예시)",
+          "description": "기간 한정 이벤트·보상 지급·이벤트 UI를 구현한 Unity 프로젝트",
+          "skills": [
+            "Unity",
+            "C#",
+            "UI 시스템",
+            "데이터 저장"
+          ],
+          "deliverables": [
+            "플레이 가능한 빌드",
+            "기획서",
+            "QA 리포트",
+            "시연 영상"
+          ]
+        },
+        {
+          "id": "PF-G2",
+          "track": "게임",
+          "title": "멀티플레이 랭킹·보상 기능 (예시)",
+          "description": "REST API로 랭킹을 등록·조회하고 시즌 보상을 지급하는 클라이언트 기능",
+          "skills": [
+            "REST API",
+            "JSON",
+            "비동기 처리"
+          ],
+          "deliverables": [
+            "연동 데모",
+            "API 연동 문서",
+            "회고"
+          ]
+        },
+        {
+          "id": "PF-G3",
+          "track": "게임",
+          "title": "개인 2D 플랫포머 게임 (예시)",
+          "description": "물리·충돌·애니메이션을 적용한 1인 개발 게임",
+          "skills": [
+            "물리엔진",
+            "애니메이션",
+            "레벨 디자인"
+          ],
+          "deliverables": [
+            "스토어 등록용 빌드",
+            "개발 일지"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "step": 7,
+    "thought": "초반에 비전공자도 따라올 수 있는 기초 교과부터 순서대로 편성하려고 합니다.",
+    "tool": "add_subject",
+    "args": {
+      "subject": {
+        "title": "게임 개발 입문과 C# 기초",
+        "category": "이론",
+        "theory_hours": 0,
+        "practice_hours": 0,
+        "project_hours": 0,
+        "mode": "집체",
+        "goals": [
+          "게임 개발 직무 이해",
+          "C# 문법 기초",
+          "디버깅 습관 형성"
+        ],
+        "topics": [
+          "게임 개발 직무와 학습 로드맵",
+          "C# 변수·조건문·반복문",
+          "함수와 배열",
+          "클래스와 객체 입문",
+          "디버깅 기초"
+        ],
+        "concepts_taught": [
+          "C# 문법",
+          "제어문",
+          "함수",
+          "객체지향",
+          "디버깅"
+        ],
+        "prerequisites": [],
+        "assessment": "실습 과제 + 형성평가 퀴즈",
+        "linked_goals": [
+          "G1"
+        ],
+        "rationale": "프로그래밍 경험이 없는 학습자 비율이 높아 가장 먼저 문법과 개발 환경을 익히게 하기 위해 배치"
+      }
+    },
+    "result": {
+      "ok": true,
+      "id": "S01",
+      "hours": 0.0
+    }
+  },
+  {
+    "step": 8,
+    "thought": "Unity 필수 교과목을 초반 기초 다음에 배치하려고 합니다.",
+    "tool": "add_subject",
+    "args": {
+      "subject": {
+        "title": "Unity 엔진 기초",
+        "category": "실습",
+        "theory_hours": 0,
+        "practice_hours": 0,
+        "project_hours": 0,
+        "mode": "집체",
+        "goals": [
+          "Unity 에디터와 기본 구조 이해",
+          "씬·오브젝트·컴포넌트 활용",
+          "기초 입력 처리 구현"
+        ],
+        "topics": [
+          "에디터와 프로젝트 구조",
+          "씬과 게임오브젝트",
+          "컴포넌트와 프리팹",
+          "스크립트 생명주기",
+          "기본 입력 처리"
+        ],
+        "concepts_taught": [
+          "Unity 에디터",
+          "게임오브젝트",
+          "컴포넌트",
+          "프리팹",
+          "입력 처리"
+        ],
+        "prerequisites": [
+          "C# 문법",
+          "객체지향"
+        ],
+        "assessment": "실습 결과물 체크리스트",
+        "linked_goals": [
+          "G1"
+        ],
+        "rationale": "필수 교과목이며 이후 모든 Unity 실습의 기반이 되므로 C# 기초 직후에 배치"
+      }
+    },
+    "result": {
+      "ok": true,
+      "id": "S02",
+      "hours": 0.0
+    }
+  },
+  {
+    "step": 9,
+    "thought": "기초 학습 후 개인 기능 구현을 통해 중간 산출물을 만들기 위해 추가합니다.",
+    "tool": "add_subject",
+    "args": {
+      "subject": {
+        "title": "Unity 2D 게임 핵심 기능 구현",
+        "category": "실습",
+        "theory_hours": 0,
+        "practice_hours": 0,
+        "project_hours": 0,
+        "mode": "집체",
+        "goals": [
+          "2D 게임의 이동·충돌·애니메이션 구현",
+          "게임 루프와 상태 처리 이해"
+        ],
+        "topics": [
+          "Rigidbody2D와 물리",
+          "충돌과 트리거",
+          "애니메이터와 상태 전환",
+          "사운드와 이펙트",
+          "UI 기초"
+        ],
+        "concepts_taught": [
+          "물리엔진",
+          "충돌처리",
+          "애니메이션",
+          "UI 시스템"
+        ],
+        "prerequisites": [
+          "Unity 에디터",
+          "C# 문법",
+          "객체지향"
+        ],
+        "assessment": "개인 미니게임 제출",
+        "linked_goals": [
+          "G1"
+        ],
+        "rationale": "Unity 기초 다음에 핵심 게임 기능을 묶어 손에 잡히는 결과물을 만들도록 구성"
+      }
+    },
+    "result": {
+      "ok": true,
+      "id": "S03",
+      "hours": 0.0
+    }
+  },
+  {
+    "step": 10,
+    "thought": "라이브 서비스와 기업 과제에 필요한 데이터 처리 능력을 먼저 길러 프로젝트로 연결하려고 합니다.",
+    "tool": "add_subject",
+    "args": {
+      "subject": {
+        "title": "데이터 저장과 API 연동",
+        "category": "실습",
+        "theory_hours": 0,
+        "practice_hours": 0,
+        "project_hours": 0,
+        "mode": "집체",
+        "goals": [
+          "로컬 저장과 직렬화 이해",
+          "REST API 연동 구현",
+          "비동기 처리 기초 습득"
+        ],
+        "topics": [
+          "PlayerPrefs와 파일 저장",
+          "JSON 직렬화",
+          "REST API 호출",
+          "비동기 처리",
+          "랭킹·보상 데이터 처리"
+        ],
+        "concepts_taught": [
+          "데이터 저장",
+          "JSON",
+          "REST API",
+          "비동기 처리"
+        ],
+        "prerequisites": [
+          "Unity 에디터",
+          "C# 문법"
+        ],
+        "assessment": "연동 실습 결과물",
+        "linked_goals": [
+          "G4"
+        ],
+        "rationale": "멀티플레이 랭킹 과제 수행을 위해 프로젝트 전 단계에서 데이터 연동을 학습시키기 위함"
+      }
+    },
+    "result": {
+      "ok": true,
+      "id": "S04",
+      "hours": 0.0
+    }
+  },
+  {
+    "step": 11,
+    "thought": "협업과 QA, 빌드 배포 역량을 프로젝트 전에 확보하려고 합니다.",
+    "tool": "add_subject",
+    "args": {
+      "subject": {
+        "title": "협업 도구와 QA·빌드 배포",
+        "category": "실습",
+        "theory_hours": 0,
+        "practice_hours": 0,
+        "project_hours": 0,
+        "mode": "집체",
+        "goals": [
+          "Git 협업과 이슈 관리",
+          "테스트 케이스 작성",
+          "빌드와 배포 절차 이해"
+        ],
+        "topics": [
+          "Git 브랜치와 병합",
+          "이슈 트래킹",
+          "테스트 케이스",
+          "QA 리포트",
+          "빌드 배포"
+        ],
+        "concepts_taught": [
+          "Git 협업",
+          "QA",
+          "빌드 배포"
+        ],
+        "prerequisites": [
+          "Unity 에디터"
+        ],
+        "assessment": "팀 저장소 기여 기록 + QA 리포트",
+        "linked_goals": [
+          "G2"
+        ],
+        "rationale": "기업 과제 프로젝트 이전에 팀 개발과 검증 절차를 익히도록 배치"
+      }
+    },
+    "result": {
+      "ok": true,
+      "id": "S05",
+      "hours": 0.0
+    }
+  },
+  {
+    "step": 12,
+    "thought": "기업 과제 1을 직접 수행하는 프로젝트 교과를 편성하려고 합니다.",
+    "tool": "add_subject",
+    "args": {
+      "subject": {
+        "title": "모바일 캐주얼 게임 이벤트 시스템 프로젝트",
+        "category": "프로젝트",
+        "theory_hours": 0,
+        "practice_hours": 0,
+        "project_hours": 0,
+        "mode": "집체",
+        "goals": [
+          "이벤트 시스템과 보상 로직 구현",
+          "기존 게임에 UI와 데이터 흐름을 통합"
+        ],
+        "topics": [
+          "기간 한정 이벤트",
+          "보상 지급",
+          "이벤트 UI",
+          "플레이 테스트",
+          "시연 준비"
+        ],
+        "concepts_taught": [
+          "기업 과제 수행",
+          "이벤트 시스템",
+          "보상 로직",
+          "통합 개발"
+        ],
+        "prerequisites": [
+          "Unity 에디터",
+          "UI 시스템",
+          "데이터 저장",
+          "Git 협업"
+        ],
+        "assessment": "플레이 가능한 빌드와 QA 리포트",
+        "linked_goals": [
+          "G2",
+          "G3"
+        ],
+        "company_task_ids": [
+          "T1"
+        ],
+        "rationale": "협약 기업 과제 T1을 그대로 연결한 핵심 프로젝트로 포트폴리오 산출물을 확보하기 위해 편성"
+      }
+    },
+    "result": {
+      "ok": true,
+      "id": "S06",
+      "hours": 0.0
+    }
+  },
+  {
+    "step": 13,
+    "thought": "기업 과제 2를 반영한 서버 연동형 프로젝트를 추가하려고 합니다.",
+    "tool": "add_subject",
+    "args": {
+      "subject": {
+        "title": "멀티플레이 랭킹·보상 기능 프로젝트",
+        "category": "프로젝트",
+        "theory_hours": 0,
+        "practice_hours": 0,
+        "project_hours": 0,
+        "mode": "집체",
+        "goals": [
+          "랭킹 API 연동",
+          "시즌 보상 지급 기능 구현",
+          "연동 문서 작성"
+        ],
+        "topics": [
+          "랭킹 API",
+          "보상 지급",
+          "예외 처리",
+          "문서화",
+          "데모 발표"
+        ],
+        "concepts_taught": [
+          "랭킹 연동",
+          "API 문서화",
+          "서버 연동"
+        ],
+        "prerequisites": [
+          "REST API",
+          "JSON",
+          "비동기 처리",
+          "Git 협업"
+        ],
+        "assessment": "연동 데모와 API 연동 문서",
+        "linked_goals": [
+          "G2",
+          "G3",
+          "G4"
+        ],
+        "company_task_ids": [
+          "T2"
+        ],
+        "rationale": "협약 기업 과제 T2를 직접 수행해 서버 연동 포트폴리오를 완성하도록 하기 위해 편성"
+      }
+    },
+    "result": {
+      "ok": true,
+      "id": "S07",
+      "hours": 0.0
+    }
+  },
+  {
+    "step": 14,
+    "thought": "총 800시간과 프로젝트 비율 조건에 맞게 교과목별 비중을 정해 시간을 자동 배분하려고 합니다.",
+    "tool": "allocate_hours",
+    "args": {
+      "weights": {
+        "S01": 2,
+        "S02": 3,
+        "S03": 3,
+        "S04": 2,
+        "S05": 4,
+        "S06": 4,
+        "S07": 3
+      },
+      "theory_share": {
+        "S01": 0.6,
+        "S02": 0.25,
+        "S03": 0.2,
+        "S04": 0.3
+      },
+      "reason": "비전공자 대상 기초를 앞에 두고, 프로젝트 2개에 충분한 시간을 주며 데이터·협업 교과를 프로젝트 직전에 배치했기 때문입니다."
+    },
+    "result": {
+      "ok": true,
+      "hours": {
+        "S01": 72.0,
+        "S02": 104.0,
+        "S03": 104.0,
+        "S04": 72.0,
+        "S05": 128.0,
+        "S06": 184,
+        "S07": 136
+      },
+      "total": 800.0,
+      "project_hours": 320
+    }
+  },
+  {
+    "step": 15,
+    "thought": "단원 설계가 요구되므로 시간 배분이 확정된 뒤 각 교과목의 단원을 작성하려고 합니다.",
+    "tool": "write_units",
+    "args": {
+      "subject_id": "S01",
+      "units": [
+        {
+          "title": "게임 개발 직무와 개발 환경",
+          "hours": 18,
+          "activities": [
+            "과정 오리엔테이션",
+            "개발 환경 설치"
+          ],
+          "deliverable": "개발 환경 체크리스트"
+        },
+        {
+          "title": "C# 변수·조건문·반복문",
+          "hours": 24,
+          "activities": [
+            "문법 실습",
+            "미니 과제"
+          ],
+          "deliverable": "기초 코딩 과제"
+        },
+        {
+          "title": "함수·배열·컬렉션 기초",
+          "hours": 18,
+          "activities": [
+            "코드 작성 실습"
+          ],
+          "deliverable": "연습 문제 풀이"
+        },
+        {
+          "title": "클래스와 객체 입문",
+          "hours": 12,
+          "activities": [
+            "클래스 설계 실습"
+          ],
+          "deliverable": "간단한 객체 모델"
+        }
+      ]
+    },
+    "result": {
+      "ok": true,
+      "id": "S01",
+      "unit_hours": [
+        18,
+        24,
+        18,
+        12.0
+      ],
+      "subject_hours": 72.0
+    }
+  },
+  {
+    "step": 16,
+    "thought": "Unity 기초 교과의 단원 설계를 작성해 이후 실습의 기반을 명확히 하려고 합니다.",
+    "tool": "write_units",
+    "args": {
+      "subject_id": "S02",
+      "units": [
+        {
+          "title": "에디터와 프로젝트 구조",
+          "hours": 22,
+          "activities": [
+            "프로젝트 생성",
+            "패키지 관리"
+          ],
+          "deliverable": "기본 프로젝트 세팅"
+        },
+        {
+          "title": "씬·게임오브젝트·컴포넌트",
+          "hours": 32,
+          "activities": [
+            "오브젝트 배치",
+            "컴포넌트 실습"
+          ],
+          "deliverable": "기본 씬 구성"
+        },
+        {
+          "title": "프리팹과 생명주기",
+          "hours": 28,
+          "activities": [
+            "프리팹 제작",
+            "스크립트 연결"
+          ],
+          "deliverable": "재사용 가능한 프리팹"
+        },
+        {
+          "title": "입력 처리와 카메라",
+          "hours": 22,
+          "activities": [
+            "입력 구현",
+            "카메라 조작"
+          ],
+          "deliverable": "조작 가능한 캐릭터"
+        }
+      ]
+    },
+    "result": {
+      "ok": true,
+      "id": "S02",
+      "unit_hours": [
+        22,
+        32,
+        28,
+        22.0
+      ],
+      "subject_hours": 104.0
+    }
+  },
+  {
+    "step": 17,
+    "thought": "핵심 기능 구현 교과의 학습 순서를 시각화해 미니게임 산출물로 이어지게 하려고 합니다.",
+    "tool": "write_units",
+    "args": {
+      "subject_id": "S03",
+      "units": [
+        {
+          "title": "2D 이동과 물리",
+          "hours": 28,
+          "activities": [
+            "이동 구현",
+            "물리 테스트"
+          ],
+          "deliverable": "이동 데모"
+        },
+        {
+          "title": "충돌·트리거·피격 처리",
+          "hours": 28,
+          "activities": [
+            "충돌 로직 구현",
+            "상태 처리"
+          ],
+          "deliverable": "충돌 처리 결과"
+        },
+        {
+          "title": "애니메이션·사운드·이펙트",
+          "hours": 24,
+          "activities": [
+            "애니메이터 구성",
+            "효과 적용"
+          ],
+          "deliverable": "연출 적용 캐릭터"
+        },
+        {
+          "title": "UI 기초와 개인 미니게임 제작",
+          "hours": 24,
+          "activities": [
+            "점수 UI",
+            "개인 게임 제작"
+          ],
+          "deliverable": "개인 미니게임 빌드"
+        }
+      ]
+    },
+    "result": {
+      "ok": true,
+      "id": "S03",
+      "unit_hours": [
+        28,
+        28,
+        24,
+        24.0
+      ],
+      "subject_hours": 104.0
+    }
+  },
+  {
+    "step": 18,
+    "thought": "데이터 저장과 API 연동을 프로젝트 직전까지 단계적으로 다듬기 위해 단원을 설계하려고 합니다.",
+    "tool": "write_units",
+    "args": {
+      "subject_id": "S04",
+      "units": [
+        {
+          "title": "로컬 저장과 직렬화",
+          "hours": 26,
+          "activities": [
+            "저장/불러오기 구현"
+          ],
+          "deliverable": "세이브 기능"
+        },
+        {
+          "title": "JSON과 데이터 모델",
+          "hours": 26,
+          "activities": [
+            "JSON 구조 설계"
+          ],
+          "deliverable": "데이터 모델 샘플"
+        },
+        {
+          "title": "REST API 호출과 비동기 처리",
+          "hours": 30,
+          "activities": [
+            "API 연동 실습"
+          ],
+          "deliverable": "랭킹 조회 데모"
+        },
+        {
+          "title": "랭킹·보상 데이터 적용",
+          "hours": 22,
+          "activities": [
+            "데이터 반영"
+          ],
+          "deliverable": "연동 결과 화면"
+        }
+      ]
+    },
+    "result": {
+      "ok": true,
+      "id": "S04",
+      "unit_hours": [
+        18,
+        18,
+        21,
+        15.0
+      ],
+      "subject_hours": 72.0
+    }
+  },
+  {
+    "step": 19,
+    "thought": "협업·QA·배포 단원의 흐름을 잡아 프로젝트 수행 전 팀 작업 역량을 정리하려고 합니다.",
+    "tool": "write_units",
+    "args": {
+      "subject_id": "S05",
+      "units": [
+        {
+          "title": "Git 협업과 브랜치 전략",
+          "hours": 24,
+          "activities": [
+            "브랜치 실습",
+            "병합 충돌 해결"
+          ],
+          "deliverable": "팀 저장소 운영 기록"
+        },
+        {
+          "title": "이슈 관리와 코드 리뷰",
+          "hours": 18,
+          "activities": [
+            "이슈 작성",
+            "리뷰 실습"
+          ],
+          "deliverable": "이슈 보드"
+        },
+        {
+          "title": "테스트 케이스와 QA",
+          "hours": 18,
+          "activities": [
+            "테스트 시나리오 작성"
+          ],
+          "deliverable": "QA 체크리스트"
+        },
+        {
+          "title": "빌드·패키징·배포",
+          "hours": 16,
+          "activities": [
+            "빌드 생성",
+            "배포 준비"
+          ],
+          "deliverable": "배포용 빌드"
+        },
+        {
+          "title": "사전 통합 점검",
+          "hours": 8,
+          "activities": [
+            "통합 테스트"
+          ],
+          "deliverable": "통합 점검표"
+        },
+        {
+          "title": "프로젝트 준비 워크숍",
+          "hours": 44,
+          "activities": [
+            "요구사항 정리",
+            "역할 분담"
+          ],
+          "deliverable": "프로젝트 실행 계획"
+        }
+      ]
+    },
+    "result": {
+      "ok": true,
+      "id": "S05",
+      "unit_hours": [
+        24,
+        18,
+        18,
+        16,
+        8,
+        44.0
+      ],
+      "subject_hours": 128.0
+    }
+  },
+  {
+    "step": 20,
+    "thought": "기업 과제 T1 프로젝트의 수행 단계와 산출물을 구체화하려고 합니다.",
+    "tool": "write_units",
+    "args": {
+      "subject_id": "S06",
+      "units": [
+        {
+          "title": "요구사항 분석과 설계",
+          "hours": 36,
+          "activities": [
+            "기획 정리",
+            "기능 분해"
+          ],
+          "deliverable": "요구사항 명세"
+        },
+        {
+          "title": "이벤트 로직과 보상 시스템 구현",
+          "hours": 64,
+          "activities": [
+            "핵심 기능 개발"
+          ],
+          "deliverable": "이벤트 시스템 구현본"
+        },
+        {
+          "title": "이벤트 UI와 데이터 연결",
+          "hours": 48,
+          "activities": [
+            "UI 통합",
+            "데이터 흐름 연결"
+          ],
+          "deliverable": "플레이 가능한 빌드"
+        },
+        {
+          "title": "테스트·수정·시연 준비",
+          "hours": 36,
+          "activities": [
+            "버그 수정",
+            "발표 리허설"
+          ],
+          "deliverable": "QA 리포트와 시연 영상"
+        }
+      ]
+    },
+    "result": {
+      "ok": true,
+      "id": "S06",
+      "unit_hours": [
+        36,
+        64,
+        48,
+        36.0
+      ],
+      "subject_hours": 184
+    }
+  },
+  {
+    "step": 21,
+    "thought": "기업 과제 T2 프로젝트의 구현과 문서화를 반영한 단원 설계를 작성하려고 합니다.",
+    "tool": "write_units",
+    "args": {
+      "subject_id": "S07",
+      "units": [
+        {
+          "title": "API 연동 설계",
+          "hours": 30,
+          "activities": [
+            "엔드포인트 분석",
+            "데이터 흐름 설계"
+          ],
+          "deliverable": "연동 설계서"
+        },
+        {
+          "title": "랭킹 조회·등록 기능 구현",
+          "hours": 46,
+          "activities": [
+            "API 호출 구현"
+          ],
+          "deliverable": "랭킹 데모"
+        },
+        {
+          "title": "시즌 보상 로직과 예외 처리",
+          "hours": 30,
+          "activities": [
+            "보상 처리 구현"
+          ],
+          "deliverable": "보상 기능 결과물"
+        },
+        {
+          "title": "문서화와 최종 발표",
+          "hours": 30,
+          "activities": [
+            "API 문서 작성",
+            "발표 준비"
+          ],
+          "deliverable": "API 연동 문서"
+        }
+      ]
+    },
+    "result": {
+      "ok": true,
+      "id": "S07",
+      "unit_hours": [
+        30,
+        46,
+        30,
+        30.0
+      ],
+      "subject_hours": 136
+    }
+  },
+  {
+    "step": 22,
+    "thought": "편성표와 단원 설계가 규정과 선수 개념, 시간 조건을 만족하는지 최종 점검하려고 합니다.",
+    "tool": "check_draft",
+    "args": {},
+    "result": {
+      "pass": false,
+      "fail_count": 3,
+      "metrics": {
+        "total_hours": 800.0,
+        "project_ratio": 0.4,
+        "online_ratio": 0.0,
+        "max_subject_hours": 184,
+        "subject_count": 7,
+        "daily_hours": 8,
+        "days_per_week": 5,
+        "total_weeks": 20
+      },
+      "issues": [
+        {
+          "level": "FAIL",
+          "code": "company_task",
+          "where": "T1",
+          "message": "협약 기업 과제 '모바일 캐주얼 게임 이벤트 시스템 개발'가 어떤 프로젝트에도 연결되지 않음"
+        },
+        {
+          "level": "FAIL",
+          "code": "company_task",
+          "where": "T2",
+          "message": "협약 기업 과제 '멀티플레이 랭킹·보상 기능 개발'가 어떤 프로젝트에도 연결되지 않음"
+        },
+        {
+          "level": "FAIL",
+          "code": "required_subject",
+          "where": "AI 활용 개발 도구",
+          "message": "필수 교과목 'AI 활용 개발 도구'이 편성표에 없음 (교과목 이름에 핵심 단어가 들어가야 함)"
+        }
+      ]
+    }
+  },
+  {
+    "step": 23,
+    "thought": "필수 교과목 AI 활용 개발 도구를 누락 없이 추가하려고 합니다.",
+    "tool": "add_subject",
+    "args": {
+      "subject": {
+        "title": "AI 활용 개발 도구",
+        "category": "실습",
+        "theory_hours": 0,
+        "practice_hours": 0,
+        "project_hours": 0,
+        "mode": "집체",
+        "goals": [
+          "AI 도구를 활용한 개발 보조와 문서화",
+          "프롬프트 기반 생산성 향상"
+        ],
+        "topics": [
+          "코드 보조 도구",
+          "리소스 생성 보조",
+          "테스트 케이스 초안",
+          "문서 초안 작성",
+          "윤리와 사용 원칙"
+        ],
+        "concepts_taught": [
+          "AI 도구 활용",
+          "프롬프트 작성",
+          "문서화 보조"
+        ],
+        "prerequisites": [
+          "C# 문법"
+        ],
+        "assessment": "과제 수행 기록",
+        "linked_goals": [
+          "G2",
+          "G3"
+        ],
+        "rationale": "필수 교과목이므로 초반 이후 실무 보조 도구 활용 능력을 별도 학습시켜 프로젝트 효율을 높이기 위해 추가"
+      }
+    },
+    "result": {
+      "ok": true,
+      "id": "S08",
+      "hours": 0.0
+    }
+  },
+  {
+    "step": 24,
+    "thought": "협약 기업 과제를 프로젝트 교과에 명시적으로 연결해 점검 오류를 해소하려고 합니다.",
+    "tool": "update_subject",
+    "args": {
+      "subject_id": "S06",
+      "fields": {
+        "company_task_ids": [
+          "T1"
+        ],
+        "rationale": "T1 기업 과제를 직접 수행하는 프로젝트로 명시해 협약 과제 연결 요건을 충족"
+      },
+      "reason": "회사 과제 T1을 프로젝트와 직접 연결하도록 보완",
+      "source": "점검 위반"
+    },
+    "result": {
+      "ok": true,
+      "id": "S06",
+      "hours": 184.0
+    }
+  },
+  {
+    "step": 25,
+    "thought": "협약 기업 과제를 두 번째 프로젝트에도 명시적으로 연결해 점검 오류를 해소하려고 합니다.",
+    "tool": "update_subject",
+    "args": {
+      "subject_id": "S07",
+      "fields": {
+        "company_task_ids": [
+          "T2"
+        ],
+        "rationale": "T2 기업 과제를 직접 수행하는 프로젝트로 명시해 협약 과제 연결 요건을 충족"
+      },
+      "reason": "회사 과제 T2를 프로젝트와 직접 연결하도록 보완",
+      "source": "점검 위반"
+    },
+    "result": {
+      "ok": true,
+      "id": "S07",
+      "hours": 136.0
+    }
+  },
+  {
+    "step": 26,
+    "thought": "협약 과제 연결과 필수 교과목 추가 후 최종 상태를 다시 확인하려고 합니다.",
+    "tool": "check_draft",
+    "args": {},
+    "result": {
+      "pass": false,
+      "fail_count": 4,
+      "metrics": {
+        "total_hours": 800.0,
+        "project_ratio": 0.4,
+        "online_ratio": 0.0,
+        "max_subject_hours": 184.0,
+        "subject_count": 8,
+        "daily_hours": 8,
+        "days_per_week": 5,
+        "total_weeks": 20
+      },
+      "issues": [
+        {
+          "level": "FAIL",
+          "code": "zero_hours",
+          "where": "S08",
+          "message": "AI 활용 개발 도구: 시간이 0"
+        },
+        {
+          "level": "FAIL",
+          "code": "company_task",
+          "where": "T1",
+          "message": "협약 기업 과제 '모바일 캐주얼 게임 이벤트 시스템 개발'가 어떤 프로젝트에도 연결되지 않음"
+        },
+        {
+          "level": "FAIL",
+          "code": "company_task",
+          "where": "T2",
+          "message": "협약 기업 과제 '멀티플레이 랭킹·보상 기능 개발'가 어떤 프로젝트에도 연결되지 않음"
+        },
+        {
+          "level": "FAIL",
+          "code": "units_missing",
+          "where": "S08",
+          "message": "AI 활용 개발 도구: 단원 설계가 없음"
+        }
+      ]
+    }
+  },
+  {
+    "step": 27,
+    "thought": "필수 교과목의 시간이 0인 점을 해소하고 프로젝트 비율을 유지하면서 편성을 완성하려고 합니다.",
+    "tool": "update_subject",
+    "args": {
+      "subject_id": "S05",
+      "fields": {
+        "practice_hours": 8,
+        "rationale": "AI 활용 개발 도구 시간을 확보하기 위해 협업 준비 단원을 일부 조정"
+      },
+      "reason": "필수 교과목 시간 확보를 위한 재배분",
+      "source": "점검 위반"
+    },
+    "result": {
+      "ok": true,
+      "id": "S05",
+      "hours": 48.0
+    }
+  },
+  {
+    "step": 28,
+    "thought": "필수 교과목 AI 활용 개발 도구에 최소 시간을 배정하려고 합니다.",
+    "tool": "update_subject",
+    "args": {
+      "subject_id": "S08",
+      "fields": {
+        "theory_hours": 8,
+        "practice_hours": 16,
+        "project_hours": 0,
+        "assessment": "과제 수행 기록",
+        "rationale": "초반에 AI 도구 활용 습관을 익히도록 기초·실습 중심으로 배치"
+      },
+      "reason": "필수 교과목 시간 배정",
+      "source": "점검 위반"
+    },
+    "result": {
+      "ok": true,
+      "id": "S08",
+      "hours": 24.0
+    }
+  },
+  {
+    "step": 29,
+    "thought": "총 800시간을 유지하면서 새로 추가한 필수 교과목까지 포함해 시간을 다시 자동 배분하려고 합니다.",
+    "tool": "allocate_hours",
+    "args": {
+      "weights": {
+        "S01": 2,
+        "S08": 1,
+        "S02": 3,
+        "S03": 3,
+        "S04": 3,
+        "S05": 2,
+        "S06": 4,
+        "S07": 3
+      },
+      "theory_share": {
+        "S01": 0.6,
+        "S08": 0.35,
+        "S02": 0.25,
+        "S03": 0.2,
+        "S04": 0.2,
+        "S05": 0.25
+      },
+      "reason": "AI 활용 개발 도구를 초반에 배치하고, 프로젝트 2개와 데이터 연동 교과의 비중을 유지하면서 총시간을 맞추기 위해 재배분"
+    },
+    "result": {
+      "ok": true,
+      "hours": {
+        "S01": 72.0,
+        "S02": 96.0,
+        "S03": 104.0,
+        "S04": 104.0,
+        "S05": 72.0,
+        "S06": 184,
+        "S07": 136,
+        "S08": 32.0
+      },
+      "total": 800.0,
+      "project_hours": 320
+    }
+  },
+  {
+    "step": 30,
+    "thought": "필수 교과목 AI 활용 개발 도구의 단원 설계를 추가하려고 합니다.",
+    "tool": "write_units",
+    "args": {
+      "subject_id": "S08",
+      "units": [
+        {
+          "title": "AI 도구 개요와 사용 원칙",
+          "hours": 8,
+          "activities": [
+            "도구 체험",
+            "사용 규칙 정리"
+          ],
+          "deliverable": "사용 가이드"
+        },
+        {
+          "title": "프롬프트 작성과 코드 보조",
+          "hours": 12,
+          "activities": [
+            "프롬프트 실습",
+            "코드 보조 활용"
+          ],
+          "deliverable": "보조 코드 샘플"
+        },
+        {
+          "title": "문서·테스트 초안 생성",
+          "hours": 12,
+          "activities": [
+            "문서 초안 작성",
+            "테스트케이스 생성"
+          ],
+          "deliverable": "과제 보조 산출물"
+        }
+      ]
+    },
+    "result": {
+      "ok": true,
+      "id": "S08",
+      "unit_hours": [
+        8,
+        12,
+        12.0
+      ],
+      "subject_hours": 32.0
+    }
+  },
+  {
+    "step": 31,
+    "thought": "최종 시간 재배분과 단원 설계 추가 후 남은 오류가 있는지 다시 확인하려고 합니다.",
+    "tool": "check_draft",
+    "args": {},
+    "result": {
+      "pass": false,
+      "fail_count": 2,
+      "metrics": {
+        "total_hours": 800.0,
+        "project_ratio": 0.4,
+        "online_ratio": 0.0,
+        "max_subject_hours": 184,
+        "subject_count": 8,
+        "daily_hours": 8,
+        "days_per_week": 5,
+        "total_weeks": 20
+      },
+      "issues": [
+        {
+          "level": "FAIL",
+          "code": "company_task",
+          "where": "T1",
+          "message": "협약 기업 과제 '모바일 캐주얼 게임 이벤트 시스템 개발'가 어떤 프로젝트에도 연결되지 않음"
+        },
+        {
+          "level": "FAIL",
+          "code": "company_task",
+          "where": "T2",
+          "message": "협약 기업 과제 '멀티플레이 랭킹·보상 기능 개발'가 어떤 프로젝트에도 연결되지 않음"
+        }
+      ]
+    }
+  },
+  {
+    "step": 32,
+    "thought": "협약 기업 과제를 프로젝트 항목에 직접 연결해 남은 점검 오류를 해결하려고 합니다.",
+    "tool": "set_project",
+    "args": {
+      "project": {
+        "id": "P1",
+        "title": "모바일 캐주얼 게임 이벤트 시스템 개발",
+        "company_task_id": "T1",
+        "subject_ids": [
+          "S06"
+        ],
+        "description": "기존 게임에 기간 한정 이벤트, 보상 지급, 이벤트 UI를 통합한다.",
+        "portfolio_output": "플레이 가능한 빌드, QA 리포트, 시연 영상"
+      }
+    },
+    "result": {
+      "ok": true,
+      "id": "P1",
+      "unknown_subject_ids": []
+    }
+  },
+  {
+    "step": 33,
+    "thought": "두 번째 협약 기업 과제를 프로젝트 항목에 직접 연결해 남은 점검 오류를 해결하려고 합니다.",
+    "tool": "set_project",
+    "args": {
+      "project": {
+        "id": "P2",
+        "title": "멀티플레이 랭킹·보상 기능 개발",
+        "company_task_id": "T2",
+        "subject_ids": [
+          "S07"
+        ],
+        "description": "랭킹 API를 연동하고 시즌 보상 지급 기능과 문서를 완성한다.",
+        "portfolio_output": "연동 데모, API 연동 문서, 발표 자료"
+      }
+    },
+    "result": {
+      "ok": true,
+      "id": "P2",
+      "unknown_subject_ids": []
+    }
+  },
+  {
+    "step": 34,
+    "thought": "프로젝트 연결까지 반영된 최종 상태를 확인해 완료 가능 여부를 점검하려고 합니다.",
+    "tool": "check_draft",
+    "args": {},
+    "result": {
+      "pass": true,
+      "fail_count": 0,
+      "metrics": {
+        "total_hours": 800.0,
+        "project_ratio": 0.4,
+        "online_ratio": 0.0,
+        "max_subject_hours": 184,
+        "subject_count": 8,
+        "daily_hours": 8,
+        "days_per_week": 5,
+        "total_weeks": 20
+      },
+      "issues": []
+    }
+  },
+  {
+    "step": 35,
+    "thought": "점검이 모두 통과되어 편성표와 단원 설계를 최종 완료하려고 합니다.",
+    "tool": "finish",
+    "args": {
+      "summary": "Unity 기반 게임 클라이언트 개발자 양성 과정을 비전공자 친화적인 C#·Unity 기초 → 핵심 기능 구현 → 데이터/API 연동 → 협업·QA → 기업 과제 프로젝트 흐름으로 편성했습니다. 협약 기업 과제 2건을 각각 프로젝트로 연결했고, 총 800시간과 프로젝트 40% 비율을 맞췄습니다.",
+      "unresolved": ""
+    },
+    "result": {
+      "ok": true
+    }
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {"id": "PF-G1", "track": "게임", "title": "모바일 캐주얼 게임 이벤트 시스템 (예시)", "description": "기간 한정 이벤트·보상 지급·이벤트 UI를 구현한 Unity 프로젝트", "skills": ["Unity", "C#", "UI 시스템", "데이터 저장"], "deliverables": ["플레이 가능한 빌드", "기획서", "QA 리포트", "시연 영상"]},
+  {"id": "PF-G2", "track": "게임", "title": "멀티플레이 랭킹·보상 기능 (예시)", "description": "REST API로 랭킹을 등록·조회하고 시즌 보상을 지급하는 클라이언트 기능", "skills": ["REST API", "JSON", "비동기 처리"], "deliverables": ["연동 데모", "API 연동 문서", "회고"]},
+  {"id": "PF-G3", "track": "게임", "title": "개인 2D 플랫포머 게임 (예시)", "description": "물리·충돌·애니메이션을 적용한 1인 개발 게임", "skills": ["물리엔진", "애니메이션", "레벨 디자인"], "deliverables": ["스토어 등록용 빌드", "개발 일지"]},
+  {"id": "PF-L1", "track": "LLM", "title": "사내 문서 질의응답 챗봇 (예시)", "description": "사내 문서를 검색해 근거와 함께 답하는 RAG 챗봇", "skills": ["RAG", "벡터 검색", "FastAPI"], "deliverables": ["배포 URL", "평가표", "아키텍처 문서"]},
+  {"id": "PF-L2", "track": "LLM", "title": "업무 자동화 에이전트 (예시)", "description": "일정·메일 tool을 호출해 반복 업무를 처리하는 에이전트", "skills": ["tool 호출", "에이전트 평가"], "deliverables": ["데모 영상", "실행 로그 분석"]}
+]

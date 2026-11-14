@@ -1,0 +1,43 @@
+{
+  "id": "llm-service",
+  "title": "LLM 서비스 개발자 과정 (예시)",
+  "note": "생성 agent 시연용으로 만든 가상의 과정 예시입니다. 실제 운영 과정이 아닙니다.",
+  "track": "LLM",
+  "flow": "파이썬 → 웹 API → LLM 활용 → RAG·에이전트 → 기업 과제 프로젝트",
+  "goals": [
+    {"id": "G1", "text": "파이썬으로 LLM API를 호출하는 웹 서비스를 만들 수 있다"},
+    {"id": "G2", "text": "검색 증강(RAG)과 tool 호출 에이전트를 설계하고 평가할 수 있다"},
+    {"id": "G3", "text": "협약 기업 과제를 수행해 서비스형 포트폴리오를 완성한다"}
+  ],
+  "subjects": [
+    {
+      "title": "파이썬 프로그래밍 기초", "category": "이론", "weight": 3, "theory_share": 0.4,
+      "topics": ["문법", "함수와 모듈", "파일·JSON"], "concepts_taught": ["파이썬 문법", "JSON"], "prerequisites": [],
+      "assessment": "코딩 과제", "linked_goals": ["G1"],
+      "units": [{"title": "파이썬 문법", "share": 0.6, "deliverable": "실습 노트"}, {"title": "파일과 JSON", "share": 0.4, "deliverable": "데이터 변환 스크립트"}]
+    },
+    {
+      "title": "웹 API 개발", "category": "실습", "weight": 3, "theory_share": 0.3,
+      "topics": ["HTTP", "FastAPI", "DB 기초"], "concepts_taught": ["REST API", "DB"], "prerequisites": ["파이썬 문법"],
+      "assessment": "API 서버 제출", "linked_goals": ["G1"], "feeds_project": true,
+      "units": [{"title": "HTTP와 FastAPI", "share": 0.6, "deliverable": "API 서버"}, {"title": "DB 연동", "share": 0.4, "deliverable": "CRUD API"}]
+    },
+    {
+      "title": "LLM 활용과 프롬프트 설계", "category": "실습", "weight": 2, "theory_share": 0.4,
+      "topics": ["LLM API", "프롬프트 설계", "출력 형식 제어"], "concepts_taught": ["LLM API", "프롬프트"], "prerequisites": ["JSON"],
+      "assessment": "프롬프트 실험 리포트", "linked_goals": ["G1"],
+      "units": [{"title": "LLM API 호출", "share": 0.5, "deliverable": "호출 예제"}, {"title": "프롬프트 실험", "share": 0.5, "deliverable": "실험 리포트"}]
+    },
+    {
+      "title": "RAG와 에이전트", "category": "실습", "weight": 3, "theory_share": 0.3,
+      "topics": ["임베딩과 벡터 검색", "RAG 파이프라인", "tool 호출 에이전트", "평가"], "concepts_taught": ["RAG", "에이전트"],
+      "prerequisites": ["LLM API", "REST API"], "assessment": "RAG 데모 + 평가표", "linked_goals": ["G2"], "feeds_project": true,
+      "units": [{"title": "임베딩과 RAG", "share": 0.5, "deliverable": "RAG 데모"}, {"title": "tool 호출 에이전트와 평가", "share": 0.5, "deliverable": "에이전트 데모"}]
+    }
+  ],
+  "project_template": {
+    "concepts_taught": ["기업 과제 수행", "서비스 배포"],
+    "prerequisites": ["RAG", "REST API"],
+    "linked_goals": ["G2", "G3"]
+  }
+}

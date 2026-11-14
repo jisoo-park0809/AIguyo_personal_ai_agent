@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>커리큘럼 에이전트</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%232f5bea%22/></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <button class="brand" data-nav="home">커리큘럼 에이전트 <span class="proto">PROTOTYPE</span></button>
+  <nav>
+    <button class="navlink" data-nav="home">새 작업</button>
+    <button class="navlink" data-nav="library">나의 자료실</button>
+    <span id="provider-badge" class="badge">AI 확인 중…</span>
+  </nav>
+</header>
+
+<main>
+  <!-- 1. 시작: 문서 붙여넣기 + 작업 선택 -->
+  <section class="screen" id="screen-home">
+    <h1>문서를 넣고 작업을 선택하세요</h1>
+    <p class="lead">넣은 서류는 커리큘럼 생성·수정·검증에 참고 자료로 쓰이고, 저장할 때 작성할 신청 서류를 원본과 같은 형식(한글·Word)으로 만들어 드려요.</p>
+    <div class="card">
+      <div class="card-head">
+        <h2>각종 신청 서류 및 공고안 넣기</h2>
+      </div>
+      <p class="hint">공고문·선정 방식·심사 기준·사업계획서·각종 신청서 파일을 <strong>모두 여기에</strong> 넣으세요. 한 파일로 합쳐져 있어도, 여러 파일로 나뉘어 있어도 괜찮아요. 넣으면 문서별로 나눠서 심사 기준과 작성할 서류를 찾아드려요.</p>
+      <label class="dropzone" id="dropzone">
+        <input type="file" accept=".txt,.md,.pdf,.docx,.pptx,.hwp,.hwpx" id="docs-file" multiple hidden>
+        <strong>파일을 끌어다 놓거나 눌러서 고르세요</strong>
+        <span class="muted small">여러 개 가능 · 한글(.hwp, .hwpx), Word(.docx), PDF, PowerPoint(.pptx), 텍스트(.txt, .md)</span>
+      </label>
+      <ul id="doc-files" class="doc-files"></ul>
+      <div class="doc-parts-head">
+        <strong>문서 구성</strong>
+      </div>
+      <div id="doc-parts" class="doc-parts"><p class="muted small">서류를 넣으면 공고·심사 기준·작성할 서류로 나눠 보여드려요.</p></div>
+    </div>
+    <h2 class="section-title">무엇을 할까요?</h2>
+    <div class="modes">
+      <button class="mode" data-mode="generate"><strong>커리큘럼 생성하기</strong><span>문서와 운영 규정을 바탕으로 새 커리큘럼 초안을 만듭니다</span></button>
+      <button class="mode" data-mode="validate"><strong>학생 입장에서 검증하기</strong><span>학생 역할별로 부족한 점을 찾아드립니다</span></button>
+      <button class="mode" data-mode="revise"><strong>커리큘럼 수정하기</strong><span>기존 커리큘럼을 자연어 요청대로 고칩니다</span></button>
+    </div>
+  </section>
+
+  <!-- 2. 설문 -->
+  <section class="screen" id="screen-survey" hidden>
+    <p class="step" id="survey-mode-label"></p>
+    <h1>과정 정보를 알려주세요</h1>
+    <p class="lead">입력한 조건으로 운영 규정집에서 관련 규정을 찾아 반영합니다. <span id="reg-status" class="muted"></span></p>
+    <div class="card form" id="survey-form">
+      <p class="hint"><span class="req">*</span> 표시는 꼭 입력해야 하는 항목이에요.</p>
+
+      <h2 class="form-group">기본 정보</h2>
+      <fieldset>
+        <legend>담당자</legend>
+        <input type="text" id="sv-owner" placeholder="예: 박지수">
+      </fieldset>
+
+      <h2 class="form-group">과정 조건</h2>
+      <fieldset>
+        <legend>사업 프로필 <span class="req">*</span></legend>
+        <label class="chip"><input type="radio" name="profile" value="KDT" checked> K-디지털 트레이닝 (KDT)</label>
+        <label class="chip"><input type="radio" name="profile" value="국민내일배움카드"> 국민내일배움카드</label>
+      </fieldset>
+      <fieldset>
+        <legend>분야·직군 <span class="req">*</span></legend>
+        <div class="chips" id="subject-chips"></div>
+        <input type="text" id="subject-other" placeholder="기타 분야를 입력하세요" hidden>
+        <input type="text" id="sv-track" placeholder="세부 직군·트랙 (선택, 예: 클라이언트 개발 / Unity·C#)">
+      </fieldset>
+      <fieldset>
+        <legend>훈련 시간과 기간 <span class="req">*</span></legend>
+        <div class="field-row">
+          <label>총 훈련시간<input type="number" id="sv-total" min="1" placeholder="예: 800"></label>
+          <label>1일 훈련시간<input type="number" id="sv-daily" min="1" max="12" value="8"></label>
+          <label>주 훈련일<input type="number" id="sv-days" min="1" max="7" value="5"></label>
+          <label>기간(개월)<input type="number" id="sv-months" min="0.5" step="0.5" placeholder="예: 5"></label>
+        </div>
+        <p class="hint" id="sv-capacity"></p>
+      </fieldset>
+      <fieldset>
+        <legend>훈련 방식 <span class="req">*</span></legend>
+        <label class="chip"><input type="radio" name="mode" value="집체" checked> 집체</label>
+        <label class="chip"><input type="radio" name="mode" value="원격"> 원격</label>
+        <label class="chip"><input type="radio" name="mode" value="혼합"> 혼합</label>
+      </fieldset>
+
+      <h2 class="form-group">학습자</h2>
+      <fieldset>
+        <legend>훈련 대상 <span class="req">*</span></legend>
+        <input type="text" id="sv-target" placeholder="예: 게임 클라이언트 개발자로 취업하려는 청년 구직자">
+      </fieldset>
+      <div class="field-row">
+        <label>비전공자 비율(%)<input type="number" id="sv-nonmajor" min="0" max="100" placeholder="예: 60"></label>
+        <label>사전 경험<input type="text" id="sv-prior" placeholder="예: 컴퓨터 기초, 코딩 경험 없음"></label>
+        <label>학습자 목표<input type="text" id="sv-goal" placeholder="예: 게임 클라이언트 개발자 취업"></label>
+      </div>
+
+      <h2 class="form-group">교육 목적</h2>
+      <fieldset>
+        <legend>교육 목적·설계 의도 <span class="req">*</span></legend>
+        <p class="hint">이 과정으로 학생들이 무엇을 얻었으면 하는지 적어주세요. 적어주신 목적을 중심으로 커리큘럼을 설계해요.</p>
+        <textarea id="intent" rows="4" placeholder="예: 게임 개발에 대한 전반적인 일경험 — 기획부터 개발·출시까지 실제 게임 회사처럼 협업해 보게 하고 싶어요"></textarea>
+        <div class="chips intent-examples">
+          <span class="muted small">예시 넣기:</span>
+          <button type="button" class="chip-btn" data-intent="게임 개발에 대한 전반적인 일경험 — 기획부터 개발·QA·출시까지 실제 게임 회사처럼 역할을 나눠 협업해 보게 하고 싶어요.">게임 개발 전반의 일경험</button>
+          <button type="button" class="chip-btn" data-intent="LLM 지식 증진 — LLM의 동작 원리를 이해하고, 프롬프트 설계·RAG·에이전트 등 실무에서 LLM을 활용하는 역량을 키우고 싶어요.">LLM 지식 증진</button>
+          <button type="button" class="chip-btn" data-intent="비전공자도 끝까지 따라올 수 있도록 기초를 탄탄히 다지고, 취업 포트폴리오가 될 프로젝트를 완성하게 하고 싶어요.">비전공자 취업 포트폴리오</button>
+        </div>
+      </fieldset>
+
+      <p class="hint">첫 화면에서 넣은 공고·신청 서류가 있으면 자동으로 반영돼요. <span id="sv-docs-status"></span></p>
+
+      <h2 class="form-group">편성 조건</h2>
+      <div class="field-row">
+        <label>프로젝트 비율 하한(%)<input type="number" id="sv-project" min="0" max="100" value="30"></label>
+        <label class="wide">필수 교과목<input type="text" id="sv-required" placeholder="쉼표로 구분 (예: Unity 엔진 기초, Git 협업)"></label>
+      </div>
+      <fieldset>
+        <legend>협약기업 과제</legend>
+        <textarea id="sv-tasks" rows="3" placeholder="한 줄에 하나씩 '기업명 - 과제명' (예: 픽셀웍스 - 모바일 게임 이벤트 시스템 개발)"></textarea>
+      </fieldset>
+
+      <h2 class="form-group">기준·실행</h2>
+      <p class="hint">커리큘럼 생성에는 쓰지 않고, 검증과 실행 단계에서 기준으로 써요.</p>
+      <div class="field-row">
+        <label>합격 기준 (페르소나 평균 점수, 5점 만점)<input type="number" id="sv-pass" min="1" max="5" step="0.1" value="3.1"></label>
+        <label>예산 상한 (원)<input type="number" id="sv-budget" min="0" step="100" value="2000"></label>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" data-nav="home">이전</button>
+      <button class="btn primary" id="survey-next">다음</button>
+    </div>
+  </section>
+
+  <!-- 3. 수정: 문서 넣기 + 자연어 요청 -->
+  <section class="screen" id="screen-revise" hidden>
+    <p class="step">커리큘럼 수정하기</p>
+    <h1>수정할 커리큘럼을 넣어주세요</h1>
+    <div class="card source-picker" data-picker="revise"></div>
+    <div class="card" id="revise-request">
+      <h2>어떤 수정을 원하세요?</h2>
+      <div id="revise-base" class="chips" hidden>
+        <label class="chip"><input type="radio" name="revise-base" value="latest" checked> 직전 수정안에 이어서</label>
+        <label class="chip"><input type="radio" name="revise-base" value="original"> 원본 기준으로 다시</label>
+      </div>
+      <textarea id="revise-instruction" rows="5" placeholder="예: 비전공자를 위해 1~2주차에 개발 환경 세팅과 Git 실습을 넣고, 전체 기간은 유지해줘"></textarea>
+      <div class="actions"><button class="btn primary" id="revise-run">수정하기</button></div>
+    </div>
+  </section>
+
+  <!-- 4. 검증: 문서 넣기 -->
+  <section class="screen" id="screen-validate" hidden>
+    <p class="step">학생 입장에서 검증하기</p>
+    <h1>학생 입장에서 검증해드려요 ~</h1>
+    <p class="lead">커리큘럼을 붙여넣거나, 파일을 올리거나, 나의 자료실에서 골라주세요.</p>
+    <div class="card source-picker" data-picker="validate"></div>
+    <div class="card" id="learner-card">
+      <div class="card-head"><h2>검증할 학생</h2><span class="muted small" id="learner-count"></span></div>
+      <p class="hint">체크한 학습자 유형이 각자 커리큘럼을 수강해 보고 평가해요. 우리 과정에 맞는 유형이 없으면 직접 추가하세요.</p>
+      <div id="learner-list" class="learner-list"></div>
+      <details class="learner-add">
+        <summary>+ 학습자 유형 추가</summary>
+        <div class="field-row">
+          <label class="wide">이름<input type="text" id="lt-name" placeholder="예: 재직 중인 비전공 직장인"></label>
+          <label>구분<select id="lt-group"><option value="non_major">비전공자</option><option value="major">전공자</option></select></label>
+        </div>
+        <label>한 줄 설명<input type="text" id="lt-summary" placeholder="예: 마케팅 3년차, 퇴근 후 공부, 엑셀은 능숙"></label>
+        <div class="field-row">
+          <label class="wide">이미 아는 것 (쉼표로 구분)<input type="text" id="lt-known" placeholder="예: 엑셀, 기초 SQL"></label>
+          <label class="check"><input type="checkbox" id="lt-basics"> 기초는 다 앎</label>
+        </div>
+        <label>모르는 것 (쉼표로 구분)<input type="text" id="lt-unknown" placeholder="예: 프로그래밍 문법, Git"></label>
+        <div class="field-row">
+          <label class="wide">프로젝트 경험<input type="text" id="lt-project" placeholder="예: 없음 / 있음: 팀 프로젝트 1회"></label>
+          <label>하루 복습 가능 시간<input type="number" id="lt-review" min="0" max="12" step="0.5" value="2"></label>
+        </div>
+        <label>중요하게 보는 것<input type="text" id="lt-cares" placeholder="예: 직장과 병행할 수 있는 학습량"></label>
+        <label>포기 신호<input type="text" id="lt-dropout" placeholder="예: 한 주에 과제가 몰리면 포기를 고민한다"></label>
+        <div class="actions tight"><button class="btn secondary" id="lt-add">추가하기</button></div>
+      </details>
+    </div>
+    <div class="actions"><button class="btn primary" id="validate-run">검증하기</button></div>
+  </section>
+
+  <!-- 5. 검증 결과 -->
+  <section class="screen" id="screen-validation" hidden>
+    <p class="step">검증 결과</p>
+    <h1 id="validation-title">학생 역할별로 부족한 점이에요</h1>
+    <p class="lead" id="validation-overall"></p>
+    <div id="quiz-fit"></div>
+    <div id="persona-list" class="personas"></div>
+    <div class="ask card">
+      <div>
+        <strong>체크한 보완점을 반영해드릴까요?</strong>
+        <span class="muted" id="gap-count"></span>
+      </div>
+      <div class="actions tight">
+        <button class="btn ghost" id="apply-no">아니오</button>
+        <button class="btn primary" id="apply-yes">예, 반영해주세요</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 미리보기 -->
+  <section class="screen" id="screen-preview" hidden>
+    <p class="step" id="preview-step">미리보기</p>
+    <div class="preview-layout">
+      <div>
+        <div class="tabs" id="preview-tabs"></div>
+        <article id="preview" class="card doc"></article>
+      </div>
+      <aside class="side">
+        <div class="card" id="version-card" hidden>
+          <h2>버전</h2>
+          <div id="version-list" class="version-list"></div>
+          <p class="muted small">생성·수정·검증 반영할 때마다 새 버전으로 자동 저장돼요. 눌러서 지난 버전을 볼 수 있어요.</p>
+        </div>
+        <div class="card">
+          <h2>학습 자료</h2>
+          <p class="muted small" id="materials-status">교과목마다 설명 → 실습 자료를 만들어요. 퀴즈는 이미 들어 있어요.</p>
+          <button class="btn secondary full" id="materials-btn">학습 자료 만들기</button>
+        </div>
+        <div class="card">
+          <h2>함께 만들 신청 서류</h2>
+          <div id="form-list" class="doc-parts"></div>
+        </div>
+        <div class="card">
+          <button class="btn primary full" id="save-btn">저장하기</button>
+          <p class="muted small" id="save-hint"></p>
+          <button class="btn ghost full" id="secondary-btn"></button>
+        </div>
+        <details class="card" id="reg-panel">
+          <summary>참고한 운영 규정 <span id="reg-count"></span></summary>
+          <div id="reg-list"></div>
+        </details>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 7. 나의 자료실 -->
+  <section class="screen" id="screen-library" hidden>
+    <h1>나의 자료실</h1>
+    <div id="library-list"></div>
+  </section>
+
+  <!-- 8. 자료실 자료 보기 -->
+  <section class="screen" id="screen-libview" hidden>
+    <button class="backlink" id="libview-back">← 나의 자료실</button>
+    <p class="step" id="libview-step"></p>
+    <div class="preview-layout">
+      <div>
+        <div class="tabs" id="libview-tabs"></div>
+        <article id="libview-body" class="card doc"></article>
+      </div>
+      <aside class="side">
+        <div class="card" id="libview-version-card" hidden>
+          <h2>버전</h2>
+          <div id="libview-versions" class="version-list"></div>
+        </div>
+        <div class="card">
+          <h2>저장된 파일</h2>
+          <div id="libview-files" class="files stack"></div>
+        </div>
+        <div class="card">
+          <button class="btn primary full" id="libview-validate">이 커리큘럼 검증하기</button>
+          <button class="btn secondary full" id="libview-revise">이 커리큘럼 수정하기</button>
+          <button class="btn danger full" id="libview-delete">삭제하기</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<template id="tpl-picker">
+  <div class="tabs">
+    <button class="tab active" data-tab="paste">붙여넣기</button>
+    <button class="tab" data-tab="file">파일 업로드</button>
+    <button class="tab" data-tab="library">나의 자료실에서 찾기</button>
+  </div>
+  <div class="tab-body" data-body="paste">
+    <textarea rows="8" class="paste-text" placeholder="커리큘럼 내용을 붙여넣으세요"></textarea>
+    <button class="btn secondary paste-load">불러오기</button>
+  </div>
+  <div class="tab-body" data-body="file" hidden>
+    <input type="file" class="file-input" accept=".txt,.md,.pdf,.docx,.pptx,.hwp,.hwpx">
+    <p class="muted small">한글(HWP·HWPX), PPT, PDF, Word, 텍스트 파일을 지원합니다.</p>
+  </div>
+  <div class="tab-body" data-body="library" hidden>
+    <div class="lib-pick"></div>
+  </div>
+  <div class="loaded" hidden></div>
+</template>
+
+<div id="loading" hidden><div class="spinner"></div><p id="loading-msg">처리 중…</p></div>
+<div id="toast" hidden></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

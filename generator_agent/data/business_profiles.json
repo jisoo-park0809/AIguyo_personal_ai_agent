@@ -1,0 +1,14 @@
+{
+  "KDT": {
+    "name": "K-디지털 트레이닝 (첨단산업·디지털 핵심 실무인재 양성훈련)",
+    "verified": false,
+    "note": "운영 규정 조항은 data/regulation_rules.json(현장 실무인재 양성을 위한 직업능력개발훈련 운영규정)에서 읽어요.",
+    "rules": []
+  },
+  "국민내일배움카드": {
+    "name": "국민내일배움카드 훈련과정",
+    "verified": false,
+    "note": "운영 규정 조항은 data/regulation_rules.json(국민내일배움카드 운영규정)에서 읽어요.",
+    "rules": []
+  }
+}

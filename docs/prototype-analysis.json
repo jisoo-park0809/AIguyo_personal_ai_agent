@@ -1,0 +1,618 @@
+{
+  "schema_version": "1.0",
+  "prototype": {
+    "id": "proto-curriculum-agent",
+    "name": "커리큘럼 에이전트 (생성 · 학생 관점 검증 · 수정)",
+    "author": "박지수",
+    "path": "Content_Agent/",
+    "run_command": ".venv/bin/pip install -r requirements.txt && .venv/bin/uvicorn app.main:app --reload  (http://127.0.0.1:8000, .env에 OPENAI_API_KEY 없으면 모의 응답)",
+    "run_verified": true,
+    "analyzed_by": "agent (Claude Code)",
+    "analyzed_at": "2026-10-29"
+  },
+  "summary": {
+    "one_liner": "공고·신청 서류와 KDT 운영 규정을 근거로 부트캠프 커리큘럼을 생성하고, 학생 페르소나별로 따로 검증하고, 신청 서류(입력한 형식 그대로)·PPT·PDF로 묶어 저장하는 강사용 에이전트",
+    "target_user": "부트캠프 강사진과 교육과정 운영·기획 담당자 (KDT 과정 신청 준비자)",
+    "core_problem": "공고·심사 기준·운영 규정을 모두 맞춘 커리큘럼과 각종 신청 서류를 손으로 맞추느라 시간이 많이 들고, 학생 눈높이에서 빈틈을 놓치기 쉬움",
+    "approach": "생성 에이전트와 학생 관점 검증 에이전트를 분리해 하나의 파이프라인으로 묶음. 검증 에이전트는 설계 의도를 모른 채 커리큘럼만 봄. 규정 PDF는 조문 단위로 검색해 근거로 넣고, 신청 파일은 공고·심사 기준·서식으로 나눠 서식마다 입력한 문서 형식을 따라 작성(한글 → .hwpx, Word → .docx)"
+  },
+  "author_notes": {
+    "assumptions": [
+      "훈련 유형은 KDT로 고정. 국민내일배움카드 규정집은 참고로만 함께 검색",
+      "KDT 규정 = 「현장 실무인재 양성을 위한 직업능력개발훈련 운영규정」 (고용노동부 공고 제2026-70호 근거)",
+      "실제 신청 파일은 공고 + 별첨(심사 기준 등) + 서식(지정 신청서, 일반현황, 사업계획서 등)이 한 파일에 합쳐져 옴",
+      "검증 에이전트에는 강사의 설계 의도를 넘기지 않아야 학생 관점이 유지됨",
+      "학생 페르소나: 유관 전공자(항상), 비전공 전환자(비전공 포함 시), 취업 준비생, 현업 주니어(심화 과정 시)",
+      "AI는 임시로 OpenAI API를 쓰고, 나중에 자체 에이전트 파이프라인으로 교체"
+    ],
+    "learnings": [
+      "다양한 서식의 문서를 지원한다 (한글 .hwp/.hwpx, PDF, Word .docx, PowerPoint .pptx, 텍스트 .txt/.md/.csv)",
+      "한 파일 안에 여러 서식이 있어서, 서식별로 나눠 각각 문서로 만들어야 실제로 쓸 수 있음",
+      "규정 PDF는 페이지 머리말이 반복되고 행정·재정 조문이 많아서, 조문 단위로 나누고 커리큘럼 관련 조문에 가중치를 줘야 검색이 쓸 만함",
+      "강사의 커리큘럼 설계 의도(예: 게임 개발 전반의 일경험, LLM 지식 증진)를 받아야 강사 생각에 가까운 결과가 나옴",
+      "서류는 미리보기 전에 모두 작성해 보여주고, 저장 때 같은 내용을 그대로 써야 혼란이 없음",
+      "한 번 작업한 서류가 첫 화면에 남아 있으면 다음 작업에 누적되어 섞임"
+    ],
+    "blockers": [
+      "운영 규정 PDF에 별표(부록) 본문이 없음 → 자료 추가 조사 중",
+      "실제 OpenAI 키로 생성·검증·서류 작성 품질과 소요 시간을 아직 확인하지 않음 (모의 응답으로만 흐름 확인)",
+      "암호가 걸리거나 배포용(복사 방지)인 한글 파일은 읽지 못함",
+      "자체 에이전트 파이프라인은 아직 없음 (PipelineProvider는 자리만 있는 스텁)"
+    ],
+    "must_keep": [
+      "생성 에이전트와 검증 에이전트 분리 + 검증에는 설계 의도를 넘기지 않는 구조",
+      "신청 서류를 한 칸에 넣으면 공고·심사 기준·작성할 서류로 자동 분할",
+      "서식마다 입력한 형식의 문서를 따라간다(한글 서식 → 한글 .hwpx, Word 서식 → .docx, PDF·텍스트 → 편집용 .docx). 자료에 없는 사실은 [작성 필요: …]로 노란색 표시",
+      "운영 규정 조문을 근거로 넣고 반영 내용을 compliance_notes로 남김",
+      "강사의 커리큘럼 설계 의도 입력과 예시",
+      "학생 역할별 부족한 점 → 반영할까요?(예/아니오) → 미리보기 흐름",
+      "나의 자료실 3분류(커리큘럼 생성안 / 수정안 / 검증 반영안) + 내용 미리보기 + 삭제"
+    ],
+    "ok_to_drop": [
+      "모의(mock) AI 응답",
+      "키워드 점수 기반 규정 검색 (벡터 검색 등으로 교체 가능, search() 입출력만 유지)",
+      "바닐라 JS 단일 페이지 UI",
+      "파일 시스템 기반 자료실 저장 (DB로 교체 가능)",
+      "붙여넣은 커리큘럼에서 과정 조건을 추정하는 규칙(inferSurvey)"
+    ]
+  },
+  "features": [
+    {
+      "id": "F1",
+      "name": "신청 서류 입력 (한 칸, 여러 파일, 다양한 형식 지원)",
+      "description": "공고·심사 기준·신청 서류를 한 칸에 붙여넣거나 여러 파일을 한 번에 추가. hwp/hwpx/pdf/docx/pptx/txt/md에서 텍스트 추출. 작업을 한 번 실행한 뒤 첫 화면으로 돌아오면 서류를 비워 다음 작업에 섞이지 않게 함",
+      "user_value": "받은 공고·서식 파일을 변환 없이 그대로 넣을 수 있음",
+      "criteria_refs": [
+        "C1",
+        "C5"
+      ],
+      "maturity": "working",
+      "evidence": {
+        "files": [
+          "app/extract.py:6",
+          "app/hwp.py:24",
+          "app/hwp.py:72",
+          "static/app.js:133",
+          "static/index.html:28"
+        ],
+        "how_to_verify": "첫 화면 '파일 추가'로 .hwp와 .hwpx를 함께 넣고 텍스트와 문서 구성이 나오는지 확인. 생성 후 '새 작업'을 누르면 칸이 비는지 확인"
+      },
+      "depends_on": [],
+      "verification": "확인됨"
+    },
+    {
+      "id": "F2",
+      "name": "문서 구성 분석 (공고 / 심사 기준 / 작성할 서류 / 참고 자료)",
+      "description": "합본 신청 파일을 [서식 N]·[별첨 N]·파일 경계 표시로 문서별로 나눔. AI가 줄 목록으로 나누고, 실패하면 규칙 기반 분할로 대체. 작성할 서류는 체크해서 작성 대상으로 고르고, 서류마다 원본 형식(저장 형식)을 표시",
+      "user_value": "어떤 서류를 써야 하는지와 심사 기준을 자동으로 찾아 줌",
+      "criteria_refs": [
+        "C1",
+        "C2"
+      ],
+      "maturity": "working",
+      "evidence": {
+        "files": [
+          "app/documents.py:48",
+          "app/documents.py:64",
+          "app/documents.py:96",
+          "app/main.py:62",
+          "app/ai/prompts.py:77"
+        ],
+        "how_to_verify": "K-디지털 트레이닝 공모 계획(.hwpx)을 넣고 '문서 구성 분석하기' → 공고·심사기준·지정 신청서·일반현황·사업계획서로 나뉘는지 확인"
+      },
+      "depends_on": [
+        "F1"
+      ],
+      "verification": "확인됨"
+    },
+    {
+      "id": "F3",
+      "name": "운영 규정 검색",
+      "description": "data/regulations/ PDF를 조문(제N조) 단위로 나누고 설문 조건(대상·수준·과목)으로 점수를 매겨 최대 16,000자를 발췌. KDT 규정을 우선하고 국민내일배움카드 규정도 참고로 포함, 행정·재정 조문은 감점",
+      "user_value": "커리큘럼이 운영 규정의 어느 조문을 근거로 했는지 보여 줌",
+      "criteria_refs": [
+        "C2"
+      ],
+      "maturity": "working",
+      "evidence": {
+        "files": [
+          "app/regulations.py:22",
+          "app/regulations.py:78",
+          "app/regulations.py:147"
+        ],
+        "how_to_verify": "게임 개발 과목으로 생성 → 미리보기 '참고한 운영 규정'에 KDT 규정 13개, 내일배움카드 규정 8개 조문이 나오는지 확인"
+      },
+      "depends_on": [],
+      "verification": "확인됨"
+    },
+    {
+      "id": "F4",
+      "name": "커리큘럼 생성",
+      "description": "설문(대상, 일반/심화, 과목, 훈련 기간, 강사의 커리큘럼 설계 의도)과 서류·규정을 넣어 커리큘럼 JSON(모듈, 프로젝트, 평가, 규정 반영 메모)을 생성. 설계 의도를 가장 중요한 기준으로 지시. 기간 미입력 시 AI가 적정 기간 제안. 미리보기에서 '다시 생성하기'로 설문 화면 복귀",
+      "user_value": "규정과 강사 의도를 반영한 커리큘럼 초안을 바로 받음",
+      "criteria_refs": [
+        "C1",
+        "C2"
+      ],
+      "maturity": "working",
+      "evidence": {
+        "files": [
+          "app/main.py:82",
+          "app/ai/prompts.py:39",
+          "app/ai/prompts.py:111",
+          "static/app.js:255",
+          "static/index.html:72"
+        ],
+        "how_to_verify": "모의 응답으로 화면 흐름은 확인됨. OpenAI 키를 넣고 생성해 설계 의도·규정 반영 품질 확인 필요"
+      },
+      "depends_on": [
+        "F2",
+        "F3"
+      ],
+      "verification": "확인 필요"
+    },
+    {
+      "id": "F5",
+      "name": "학생 입장 검증",
+      "description": "과정 조건으로 학생 페르소나를 만들고, 검증 에이전트가 각 페르소나가 되어 부족한 점(위치, 심각도, 보완 제안)을 찾음. 설계 의도는 넘기지 않음. 커리큘럼은 붙여넣기·파일·자료실에서 불러옴",
+      "user_value": "학생 유형별로 어디서 막히는지 미리 알 수 있음",
+      "criteria_refs": [
+        "C1",
+        "C4"
+      ],
+      "maturity": "working",
+      "evidence": {
+        "files": [
+          "app/personas.py:28",
+          "app/ai/prompts.py:57",
+          "app/main.py:96",
+          "static/app.js:370"
+        ],
+        "how_to_verify": "모의 응답으로 흐름 확인됨. OpenAI 키로 검증 결과가 구체적인지 확인 필요"
+      },
+      "depends_on": [],
+      "verification": "확인 필요"
+    },
+    {
+      "id": "F6",
+      "name": "검증 결과 반영 (예 / 아니오)",
+      "description": "체크한 보완점을 커리큘럼에 반영해 미리보기. '아니오'는 반영하지 않고 검증을 시작한 화면으로 돌아감",
+      "user_value": "검증 결과 중 원하는 것만 골라 반영",
+      "criteria_refs": [
+        "C1"
+      ],
+      "maturity": "working",
+      "evidence": {
+        "files": [
+          "app/main.py:107",
+          "app/ai/prompts.py:65",
+          "static/app.js:431"
+        ],
+        "how_to_verify": "검증 후 '아니오' → 이전 화면, '예' → 반영안 미리보기 확인"
+      },
+      "depends_on": [
+        "F5"
+      ],
+      "verification": "확인됨"
+    },
+    {
+      "id": "F7",
+      "name": "커리큘럼 수정 (자연어 요청)",
+      "description": "기존 커리큘럼을 불러와 자연어로 수정 요청 → 수정안 미리보기 → 저장 또는 다시 생성하기(요청 입력으로 복귀). 직전 수정안에 이어서 / 원본 기준 선택",
+      "user_value": "말로 요청해 커리큘럼을 고침",
+      "criteria_refs": [
+        "C1"
+      ],
+      "maturity": "working",
+      "evidence": {
+        "files": [
+          "app/main.py:89",
+          "app/ai/prompts.py:50",
+          "static/app.js:349"
+        ],
+        "how_to_verify": "모의 응답으로 흐름 확인됨. OpenAI 키로 요청 외 부분이 유지되는지 확인 필요"
+      },
+      "depends_on": [],
+      "verification": "확인 필요"
+    },
+    {
+      "id": "F8",
+      "name": "신청 서류 자동 작성 + 미리보기",
+      "description": "체크한 서식을 커리큘럼·공고·심사 기준·규정으로 채움(서버에서 최대 4건 병렬). 미리보기 전에 모두 작성해 탭(커리큘럼 | 서식들)으로 보여 주고, 저장 때 같은 내용을 그대로 사용. 없는 사실은 [작성 필요: …] 표시",
+      "user_value": "신청 서류 초안을 커리큘럼과 맞춰 한 번에 받음",
+      "criteria_refs": [
+        "C3"
+      ],
+      "maturity": "working",
+      "evidence": {
+        "files": [
+          "app/main.py:127",
+          "app/ai/prompts.py:96",
+          "static/app.js:493"
+        ],
+        "how_to_verify": "생성 → 미리보기 탭에 체크한 서식이 모두 나오는지, 저장 시 추가 작성 요청이 없는지 확인. OpenAI 키로 서식 작성 품질 확인 필요"
+      },
+      "depends_on": [
+        "F2",
+        "F4"
+      ],
+      "verification": "확인 필요"
+    },
+    {
+      "id": "F9",
+      "name": "내보내기 (PPT · PDF · 입력 형식을 따르는 신청 서류)",
+      "description": "커리큘럼 PPT와 PDF(한글 폰트), 입력한 형식을 따르는 서식별 작성본(한글 서식 → .hwpx, 그 밖 → .docx), 검증 결과 docx를 생성. 바이너리 .hwp 원본은 한글에서 열리는 .hwpx로 저장",
+      "user_value": "바로 제출·공유할 수 있는 파일",
+      "criteria_refs": [
+        "C3"
+      ],
+      "maturity": "working",
+      "evidence": {
+        "files": [
+          "app/exporters.py:54",
+          "app/exporters.py:134",
+          "app/exporters.py:238",
+          "app/exporters.py:310",
+          "app/hwpx_writer.py",
+          "app/library.py:73"
+        ],
+        "how_to_verify": "한글·Word 서식을 넣고 저장한 뒤 자료실에서 hwpx/docx/pptx/pdf를 내려받아 열어 보기 (hwpx는 한글 프로그램에서 열리는지 확인 필요)"
+      },
+      "depends_on": [
+        "F4",
+        "F8"
+      ],
+      "verification": "확인됨"
+    },
+    {
+      "id": "F10",
+      "name": "나의 자료실",
+      "description": "커리큘럼 생성안 / 수정안 / 검증 반영안 폴더에 묶음 저장. 항목을 누르면 커리큘럼·신청 서류·검증 결과 탭으로 미리보기. 검증하기·수정하기로 이어서 작업, 삭제 가능. 예전 저장본은 docx를 읽어 서류 탭 표시",
+      "user_value": "작업 결과를 한곳에 모아 다시 보고 이어서 작업",
+      "criteria_refs": [
+        "C1",
+        "C5"
+      ],
+      "maturity": "working",
+      "evidence": {
+        "files": [
+          "app/library.py:53",
+          "app/library.py:114",
+          "app/library.py:135",
+          "app/exporters.py:262",
+          "static/app.js:618"
+        ],
+        "how_to_verify": "저장 → 나의 자료실 → 항목 클릭 시 탭 미리보기, 삭제 확인"
+      },
+      "depends_on": [
+        "F9"
+      ],
+      "verification": "확인됨"
+    },
+    {
+      "id": "F11",
+      "name": "AI 공급자 교체 구조",
+      "description": "CurriculumAI 인터페이스(generate, revise, validate, apply_feedback, parse, analyze_documents, fill_form) 뒤에 OpenAI / 모의 / 자체 파이프라인 구현을 두고 AI_PROVIDER 환경변수로 선택. 자체 파이프라인은 아직 스텁",
+      "user_value": "나중에 자체 에이전트 파이프라인으로 화면 수정 없이 교체",
+      "criteria_refs": [
+        "C4"
+      ],
+      "maturity": "mock",
+      "evidence": {
+        "files": [
+          "app/ai/base.py:29",
+          "app/ai/__init__.py:10",
+          "app/ai/pipeline_provider.py"
+        ],
+        "how_to_verify": "AI_PROVIDER=mock / openai로 바꿔 실행. pipeline은 NotImplementedError(501)"
+      },
+      "depends_on": [],
+      "verification": "확인됨"
+    }
+  ],
+  "user_flows": [
+    {
+      "name": "커리큘럼 생성",
+      "steps": [
+        "첫 화면에 신청 서류·공고안 넣기(파일 여러 개 가능)",
+        "문서 구성 자동 분석, 작성할 서류 체크",
+        "커리큘럼 생성하기",
+        "과정 정보 설문(대상, 일반/심화, 과목, 훈련 기간, 설계 의도)",
+        "규정 검색 + 커리큘럼 생성 + 체크한 서류 모두 작성",
+        "미리보기(커리큘럼 | 서류 탭)",
+        "저장하기 → 나의 자료실/커리큘럼 생성안, 또는 다시 생성하기 → 설문 화면"
+      ],
+      "feature_refs": [
+        "F1",
+        "F2",
+        "F3",
+        "F4",
+        "F8",
+        "F9",
+        "F10"
+      ]
+    },
+    {
+      "name": "학생 입장 검증",
+      "steps": [
+        "학생 입장에서 검증하기",
+        "커리큘럼 붙여넣기 / 파일 / 자료실에서 고르기",
+        "학생 역할별 부족한 점 확인, 반영할 항목 체크",
+        "반영해드릴까요? 예 → 반영안 미리보기 / 아니오 → 이전 화면",
+        "저장하기 → 검증 반영안, 또는 다시 검증하기"
+      ],
+      "feature_refs": [
+        "F5",
+        "F6",
+        "F8",
+        "F10"
+      ]
+    },
+    {
+      "name": "커리큘럼 수정",
+      "steps": [
+        "커리큘럼 수정하기",
+        "커리큘럼 불러오기",
+        "자연어로 수정 요청",
+        "수정안 미리보기",
+        "저장하기 → 수정안, 또는 다시 생성하기 → 요청 입력"
+      ],
+      "feature_refs": [
+        "F7",
+        "F8",
+        "F10"
+      ]
+    },
+    {
+      "name": "자료실에서 이어서 작업",
+      "steps": [
+        "나의 자료실",
+        "항목 클릭 → 탭 미리보기",
+        "이 커리큘럼 검증하기 / 수정하기 / 삭제하기"
+      ],
+      "feature_refs": [
+        "F10",
+        "F5",
+        "F7"
+      ]
+    }
+  ],
+  "data_model": [
+    {
+      "entity": "Survey (과정 조건)",
+      "fields": [
+        "target",
+        "level",
+        "funding(KDT 고정)",
+        "subject",
+        "duration",
+        "intent(설계 의도, 예전 extra)"
+      ],
+      "storage": "요청 바디, 자료실 meta.json"
+    },
+    {
+      "entity": "DocContext / DocPart (신청 서류와 분할 문서)",
+      "fields": [
+        "application_docs",
+        "criteria(예전 저장본용)",
+        "documents[id, name, kind, summary, text, selected, source_format(원본 파일 형식), output_format(저장 형식 hwpx|docx)]"
+      ],
+      "storage": "브라우저 localStorage(작업 전까지), 자료실 context.json"
+    },
+    {
+      "entity": "RegSnippet (규정 발췌)",
+      "fields": [
+        "source",
+        "page",
+        "article",
+        "text"
+      ],
+      "storage": "data/regulations/*.pdf를 메모리에서 조문 단위로 캐시"
+    },
+    {
+      "entity": "Curriculum",
+      "fields": [
+        "title",
+        "summary",
+        "target_summary",
+        "total_weeks",
+        "total_hours",
+        "learning_goals",
+        "modules[period, title, hours, objectives, topics, practice, prerequisites]",
+        "projects",
+        "assessment",
+        "compliance_notes",
+        "change_log"
+      ],
+      "storage": "자료실 curriculum.json"
+    },
+    {
+      "entity": "Validation",
+      "fields": [
+        "overall",
+        "personas[persona, profile, score, strengths, gaps[id, persona, issue, location, severity, suggestion]]"
+      ],
+      "storage": "자료실 validation.json"
+    },
+    {
+      "entity": "FilledForm (작성한 서식)",
+      "fields": [
+        "title",
+        "blocks[type(heading/paragraph/bullet/table), text, level, rows]"
+      ],
+      "storage": "자료실 forms.json + 서식별 .hwpx 또는 .docx (원본 형식을 따름)"
+    },
+    {
+      "entity": "Library entry (자료실 항목)",
+      "fields": [
+        "category",
+        "folder",
+        "title",
+        "created_at",
+        "survey",
+        "files"
+      ],
+      "storage": "data/library/<분류>/<날짜_과정명>/meta.json + pptx/pdf/hwpx/docx"
+    }
+  ],
+  "tech": {
+    "stack": [
+      "Python 3.9",
+      "FastAPI + uvicorn",
+      "pydantic v2",
+      "Vanilla JS/HTML/CSS 단일 페이지",
+      "python-docx",
+      "python-pptx",
+      "reportlab 4.2.5",
+      "pypdf",
+      "olefile + lxml (한글 파일)"
+    ],
+    "external_services": [
+      "OpenAI API (임시, OPENAI_API_KEY 없으면 모의 응답)"
+    ],
+    "ai_usage": [
+      {
+        "purpose": "신청 서류 묶음 분할 (줄 목록 → 문서 경계)",
+        "model": "gpt-4o-mini (OPENAI_MODEL로 변경)",
+        "prompt_path": "app/ai/prompts.py:77"
+      },
+      {
+        "purpose": "커리큘럼 생성",
+        "model": "gpt-4o-mini",
+        "prompt_path": "app/ai/prompts.py:39"
+      },
+      {
+        "purpose": "자연어 수정",
+        "model": "gpt-4o-mini",
+        "prompt_path": "app/ai/prompts.py:50"
+      },
+      {
+        "purpose": "학생 페르소나 검증",
+        "model": "gpt-4o-mini",
+        "prompt_path": "app/ai/prompts.py:57"
+      },
+      {
+        "purpose": "검증 보완점 반영",
+        "model": "gpt-4o-mini",
+        "prompt_path": "app/ai/prompts.py:65"
+      },
+      {
+        "purpose": "붙여넣은 커리큘럼 구조화",
+        "model": "gpt-4o-mini",
+        "prompt_path": "app/ai/prompts.py:72"
+      },
+      {
+        "purpose": "신청 서식 작성",
+        "model": "gpt-4o-mini",
+        "prompt_path": "app/ai/prompts.py:96"
+      }
+    ]
+  },
+  "evaluation": [
+    {
+      "criterion_id": "C1",
+      "score": 4,
+      "rationale": "(임시 기준: 강사 업무 흐름 충족) 생성·검증·수정·자료실 흐름이 작성자 피드백대로 모두 동작. 실제 AI 품질은 미확인",
+      "evidence": [
+        "static/app.js:255",
+        "static/app.js:370",
+        "static/app.js:349"
+      ]
+    },
+    {
+      "criterion_id": "C2",
+      "score": 3,
+      "rationale": "(임시 기준: 규정·심사 기준 근거) 조문 단위 검색과 compliance_notes는 있으나 키워드 점수 방식이고 별표 본문이 없음",
+      "evidence": [
+        "app/regulations.py:147",
+        "app/ai/prompts.py:39"
+      ]
+    },
+    {
+      "criterion_id": "C3",
+      "score": 4,
+      "rationale": "(임시 기준: 결과물 활용도) 입력 형식을 따르는 서식별 작성본(.hwpx/.docx), PPT, PDF를 묶어 저장하고 빈칸을 표시. 원본 서식 레이아웃(표 구조)은 그대로 재현하지 않음",
+      "evidence": [
+        "app/exporters.py:238",
+        "app/main.py:127"
+      ]
+    },
+    {
+      "criterion_id": "C4",
+      "score": 4,
+      "rationale": "(임시 기준: 확장성) 생성·검증 에이전트 분리와 공급자 인터페이스로 자체 파이프라인 교체가 쉬움. 파이프라인 구현은 스텁",
+      "evidence": [
+        "app/ai/base.py:29",
+        "app/ai/prompts.py:111"
+      ]
+    },
+    {
+      "criterion_id": "C5",
+      "score": 3,
+      "rationale": "(임시 기준: 완성도·안정성) 모의 응답으로 브라우저 흐름을 매번 확인했지만 자동 테스트가 없고, 실제 OpenAI 키로는 미검증",
+      "evidence": [
+        "README.md"
+      ]
+    }
+  ],
+  "strengths": [
+    "생성과 검증을 분리하고 검증에 설계 의도를 숨겨 학생 관점이 섞이지 않음",
+    "실제 KDT 공모 파일(hwpx 합본)을 넣으면 서식별로 나눠 원본과 같은 한글(.hwpx) 초안을 만듦",
+    "운영 규정 조문을 근거로 넣고 어떤 조문을 반영했는지 남김",
+    "AI 없이도(모의 응답) 전체 화면 흐름을 시연할 수 있음",
+    "AI 공급자 교체 지점이 한 곳(CurriculumAI)이라 통합이 쉬움"
+  ],
+  "weaknesses": [
+    "규정 검색이 키워드 점수 방식이라 표현이 다르면 놓칠 수 있음",
+    "작성한 서식이 원본 한글 서식의 표·칸 구조를 그대로 따르지 않고 블록(제목·문단·표)으로 재구성됨",
+    "로그인·사용자 구분이 없음 (요구사항상 제외)",
+    "자동 테스트 코드가 없음",
+    "프롬프트에 넣는 서류 15,000자, 규정 16,000자 제한이 있어 아주 긴 공고는 잘림"
+  ],
+  "risks": [
+    "보안: 인증이 없어서 서버를 외부에 열면 누구나 자료실을 보고 삭제할 수 있음 (기본은 127.0.0.1)",
+    "보안: 업로드한 신청 서류(기관 정보 포함 가능)가 OpenAI API로 전송됨",
+    "비용: 저장·미리보기 때 서식 수만큼 AI를 호출함 (최대 4건 병렬)",
+    "유지보수: 자료실이 파일 시스템 폴더라 여러 사람이 동시에 쓰기 어렵고, 규정 PDF가 바뀌면 검색 가중치 재조정이 필요"
+  ],
+  "reuse_candidates": [
+    {
+      "what": "한글(.hwp/.hwpx) 텍스트 추출기",
+      "path": "app/hwp.py",
+      "reason": "외부 의존 최소(olefile, lxml)로 공고·서식 파일을 읽음. 다른 프로토타입에도 그대로 사용 가능"
+    },
+    {
+      "what": "신청 서류 묶음 분할기",
+      "path": "app/documents.py",
+      "reason": "[서식 N]/[별첨 N] 표시와 AI 분할 + 규칙 기반 대체로 합본 파일을 문서별로 나눔"
+    },
+    {
+      "what": "운영 규정 조문 검색",
+      "path": "app/regulations.py",
+      "reason": "search(survey) 입출력만 유지하면 벡터 DB로 교체 가능. 조문 분할 로직은 RAG 청킹에도 재사용 가능"
+    },
+    {
+      "what": "AI 공급자 인터페이스와 프롬프트",
+      "path": "app/ai/base.py, app/ai/prompts.py",
+      "reason": "생성·검증·반영·서식 작성 프롬프트와 JSON 스키마, 검증 시 설계 의도 제외 로직"
+    },
+    {
+      "what": "학생 페르소나 규칙",
+      "path": "app/personas.py",
+      "reason": "과정 조건으로 검증할 학생 유형을 정하는 규칙"
+    },
+    {
+      "what": "PPT/PDF/Word/한글 내보내기",
+      "path": "app/exporters.py, app/hwpx_writer.py",
+      "reason": "한글 폰트 처리, [작성 필요] 노란 표시, docx 다시 읽기, 외부 라이브러리 없이 .hwpx 쓰기 포함"
+    }
+  ],
+  "open_questions": [
+    "팀 공통 평가 기준(C1~)의 실제 정의는 무엇인가? 이 문서의 C1~C5는 임시 기준",
+    "실제 OpenAI 모델로 생성·검증·서식 작성 품질과 소요 시간·비용은 어느 정도인가?",
+    "운영 규정 별표(부록) 본문은 어디서 구할 수 있는가?",
+    "작성한 서류를 원본 한글 서식 레이아웃 그대로 채워야 하는가, 아니면 제목·문단·표로 다시 구성한 초안(.hwpx/.docx)으로 충분한가?",
+    "통합 후에도 국민내일배움카드 과정을 다시 지원할 계획이 있는가?",
+    "자체 에이전트 파이프라인은 어떤 입출력으로 붙일 것인가? (현재 CurriculumAI 메서드 기준)"
+  ]
+}
